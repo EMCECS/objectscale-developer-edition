@@ -1,4 +1,7 @@
-def install_tux(args=[]):
+
+docker_gpg = "https://download.docker.com/linux/ubuntu/gpg"
+
+def install_tux():
     print('Beginning install process for Linux...')
 
 

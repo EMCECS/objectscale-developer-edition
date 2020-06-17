@@ -10,16 +10,15 @@ from arg_parsing.arg_cache import parse_args
 
 def main():
     print('Hello, Developer.')
-    command_line_args = sys.argv
-    parse_args(command_line_args)
+    parse_args()
 
     os = platform.system().casefold()
     if os.find('linux') > -1:
-        install_tux(args=command_line_args)
+        install_tux()
     elif os.find('windows') > -1:
-        install_win(args=command_line_args)
+        install_win()
     elif os.find('darwin') > -1:
-        install_mac(args=command_line_args)
+        install_mac()
     else:
         print("Unsupported OS: "+os)
 
