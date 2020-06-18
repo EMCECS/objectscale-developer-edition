@@ -1,62 +1,54 @@
 import os
 import os.path
 import ctypes
+import argparse
+import arg_parsing.arg_cache
+import windows.minikube_utils
 
-#URLs for grabbing programs
+# URLs for grabbing programs
 deos_url = "raw.githubusercontent.com/emecs/charts/master/docs"
 helm_url = "https://get.helm.sh/helm-v2.16.9-windows-amd64.zip"
 docker_url = "https://download.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
-minikube_url = "https://download.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
 
-#Pathing variables.
+# Pathing variables.
 PATH = os.getenv('PATH')
 
-#Main function
-def install_win():
+
+# Main function
+def install_win(args: argparse.ArgumentParser):
     print('Beginning install process for Windows.')
 
-    #Check for UAC elevation.
+    # Check for UAC elevation.
     if not is_admin():
-        print('This installer needs to be run as an '+colors.bold+'admin.'+colors.reset)
+        print('This installer needs to be run as an ' + colors.bold + 'admin.' + colors.reset)
         return
 
-    print(colors.fg.lightcyan+'Checking for Minikube')
-    minikube_installed, minikube_path = check_minikube_installation()
-    if minikube_installed:
+    # Minikube items.
+    print(colors.fg.lightcyan + '-----Minikube-----')
+    minikube_util = windows.minikube_utils.minikube_utility()
+    minikube_installed, minikube_path = minikube_util.check_minikube_installation(PATH=PATH)
+    if minikube_installed and not (args.clean or args.minikube_clean or args.minikube_install):
         print('Minikube installation found! installed at  ')
         print(minikube_path)
+        minikube_util.get_minikube_version()
+    elif not minikube_installed:
+        print('Minikube not found, installing minikube')
+    elif minikube_installed and args.minikube_install:
+        print('minikube installed, now re-installing..')
+        minikube_util.clean_minikube()
+        minikube_util.uninstall_minikube()
     else:
-        print('Minikube not found.')
+        print('Removing local data')
+        minikube_util.clean_minikube()
     print(colors.reset)
 
-def is_admin():
-    is_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
-    return is_admin
 
-def check_minikube_installation():
-    print('Verifying Minikube Installation')
-
-    #split into paths to search for minikube
-    is_valid_install = False
-    paths = PATH.split(';')
-    for filePath in paths:
-        if not os.path.isdir(filePath):
-            paths.remove(filePath)
-
-    #acumulate list of files until minikube.exe is found.
-    files = []
-    minikube_path = ''
-    for filePath in paths:
-        files.extend([f for f in os.listdir(filePath) if os.path.isfile(os.path.join(filePath, f))])
-        if 'minikube.exe' in files:
-            is_valid_install = True
-            minikube_path = filePath
-            break
-
-    return is_valid_install, minikube_path
+def is_admin() -> bool:
+    run_as_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
+    return run_as_admin
 
 
-def verify_installation():
+def verify_installation() -> bool:
     print('Verifying installation')
     isValidInstall = False
 
@@ -64,8 +56,8 @@ def verify_installation():
 
     return isValidInstall
 
-class colors:
 
+class colors:
     reset = '\033[0m'
     bold = '\033[01m'
     disable = '\033[02m'
@@ -73,6 +65,7 @@ class colors:
     reverse = '\033[07m'
     strikethrough = '\033[09m'
     invisible = '\033[08m'
+
     class fg:
         black = '\033[30m'
         red = '\033[31m'
@@ -89,6 +82,7 @@ class colors:
         lightblue = '\033[94m'
         pink = '\033[95m'
         lightcyan = '\033[96m'
+
     class bg:
         black = '\033[40m'
         red = '\033[41m'
