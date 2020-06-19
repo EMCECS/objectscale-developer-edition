@@ -22,13 +22,13 @@ class helm_utility:
 
     def find_helm_in_PATH(self, PATH=os.getenv('PATH')) -> bool:
 
-        # Split into paths to search for minikube
+        # Split into paths to search for helm
         paths = PATH.split(';')
         for filePath in paths:
             if not os.path.isdir(filePath):
                 paths.remove(filePath)
 
-        # Acumulate list of files until minikube.exe is found.
+        # Acumulate list of files until helm.exe is found.
         files = []
         for filePath in paths:
             files.extend([f for f in os.listdir(filePath) if os.path.isfile(os.path.join(filePath, f))])
@@ -39,7 +39,8 @@ class helm_utility:
 
         return self.is_valid_install
 
-    #def get_helm_version(self):
+    def get_helm_version(self):
+        return
 
     def clean_helm(self):
         # Let minikube remove itself.
@@ -47,6 +48,8 @@ class helm_utility:
         os.system('helm ls --all --short | \"lib\\xargswin.exe\" -I{} \"helm delete {} --purge\"')
         print('Helm cleaned!')
 
-    #def uninstall_helm(self):
+    def uninstall_helm(self):
+        return
 
-    #def install_helm(self, PATH=os.getenv('PATH')):
+    def install_helm(self, PATH=os.getenv('PATH')):
+        return
