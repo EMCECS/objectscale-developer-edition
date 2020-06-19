@@ -32,4 +32,16 @@ class parse_cache:
                                  dest='minikube_install',
                                  help='Reinstall the minikube system, even if currently installed.')
 
+        self.parser.add_argument('-hc', '--helmClean',
+                                 action='store_true',
+                                 default=False,
+                                 dest='helm_clean',
+                                 help='Destroy current Minikube configuration and start fresh.')
+
+        self.parser.add_argument('-hi', '--helmInstall',
+                                 action='store_true',
+                                 default=False,
+                                 dest='helm_install',
+                                 help='Reinstall the minikube system, even if currently installed.')
+
         self.args = self.parser.parse_args()

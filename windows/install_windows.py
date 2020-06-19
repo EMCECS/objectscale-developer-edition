@@ -4,10 +4,10 @@ import ctypes
 import argparse
 import arg_parsing.arg_cache
 import windows.minikube_utils
+import windows.helm_utils
 
 # URLs for grabbing programs
 deos_url = "raw.githubusercontent.com/emecs/charts/master/docs"
-helm_url = "https://get.helm.sh/helm-v2.16.9-windows-amd64.zip"
 docker_url = "https://download.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
 
 # Pathing variables.
@@ -26,21 +26,34 @@ def install_win(args: argparse.ArgumentParser):
     # Minikube items.
     print(colors.fg.lightcyan + '-----Minikube-----')
     minikube_util = windows.minikube_utils.minikube_utility()
-    minikube_installed, minikube_path = minikube_util.check_minikube_installation(PATH=PATH)
+    minikube_installed, minikube_path = minikube_util.check_minikube_installation()
+
     if minikube_installed and not (args.clean or args.minikube_clean or args.minikube_install):
         print('Minikube installation found! installed at  ')
         print(minikube_path)
         minikube_util.get_minikube_version()
+
     elif not minikube_installed:
         print('Minikube not found, installing minikube')
-    elif minikube_installed and args.minikube_install:
+        minikube_util.install_minikube()
+
+    elif args.minikube_install:
         print('minikube installed, now re-installing..')
         minikube_util.clean_minikube()
         minikube_util.uninstall_minikube()
-    else:
+        minikube_util.install_minikube()
+
+    elif args.clean or args.minikube_clean:
         print('Removing local data')
         minikube_util.clean_minikube()
-    print(colors.reset)
+
+    print('----- END Minikube -----'+colors.reset)
+
+
+    print(colors.fg.green+'-----HELM------')
+    helm_util = windows.helm_utils.helm_utility()
+    helm_installed, helm_path = helm_util.check_helm_installation()
+    helm_util.clean_helm()
 
 
 def is_admin() -> bool:
