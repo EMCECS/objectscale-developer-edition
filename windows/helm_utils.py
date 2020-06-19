@@ -29,7 +29,7 @@ class helm_utility:
             if not os.path.isdir(filePath):
                 paths.remove(filePath)
 
-        # Acumulate list of files until helm.exe is found.
+        # Accumulate list of files until helm.exe is found.
         files = []
         for filePath in paths:
             files.extend([f for f in os.listdir(filePath) if os.path.isfile(os.path.join(filePath, f))])

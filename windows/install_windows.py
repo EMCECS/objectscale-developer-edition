@@ -38,30 +38,30 @@ def install_win(args: argparse.ArgumentParser):
         print('Minikube not found, installing minikube')
         minikube_util.install_minikube()
 
-    elif args.minikube_install:
+    if args.minikube_install:
         print('minikube installed, now re-installing..')
         minikube_util.clean_minikube()
         minikube_util.uninstall_minikube()
         minikube_util.install_minikube()
 
-    elif args.clean or args.minikube_clean:
+    if args.clean or args.minikube_clean:
         print('Removing local data')
         minikube_util.clean_minikube()
-
-    print('----- END Minikube -----' + colors.reset)
+    print('----- END Minikube -----\n' + colors.reset)
 
     print(colors.fg.green + '-----Helm------')
     helm_util = windows.helm_utils.helm_utility()
     helm_installed, helm_path = helm_util.check_helm_installation()
-    helm_util.clean_helm()
-    print('----- END Helm -----' + colors.reset)
+    #TODO: Finish Helm Logic
+    print('----- END Helm -----\n' + colors.reset)
 
     print(colors.fg.blue + '-----Docker-----')
     #TODO: Verify docker installation
-    print('----- END Docker -----' + colors.reset)
+    print('----- END Docker -----\n' + colors.reset)
 
     print(colors.fg.yellow+'-----Objectscale-----')
-    print('----- END Objectscale -----')
+    #TODO: use helm to install objectscale
+    print('----- END Objectscale -----\n'+colors.reset)
 
     #TODO: implement validity check for installation
     if install_successful:

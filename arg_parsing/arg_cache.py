@@ -1,7 +1,6 @@
 import argparse
 
 
-
 class parse_cache:
     parser = ''
     args = ''
@@ -9,16 +8,17 @@ class parse_cache:
     def __init__(self):
         self.parser = argparse.ArgumentParser(description='An install application for an ECS dev environment')
         self.parser.add_argument('-t', '--token',
-                        dest='token',
-                        type=str,
-                        default="NO TOKEN",
-                        help="Your github token")
+                                 dest='token',
+                                 type=str,
+                                 default="NO TOKEN",
+                                 help="Your github token")
 
         self.parser.add_argument('-c', '--clean',
-                        action='store_true',
-                        default=False,
-                        dest='clean',
-                        help="A clean install. Removes current Minikube configuration")
+                                 action='store_true',
+                                 default=False,
+                                 dest='clean',
+                                 help="A clean install of all components. Removes all configurations of all "
+                                      "namespaces on local machine")
 
         self.parser.add_argument('-mc', '--minikubeClean',
                                  action='store_true',
