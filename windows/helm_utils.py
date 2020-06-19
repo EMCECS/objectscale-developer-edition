@@ -5,7 +5,8 @@ import urllib.request
 
 class helm_utility:
     helm_url = "https://get.helm.sh/helm-v2.16.9-windows-amd64.zip"
-    minikube_install_path = 'C:\\Program Files\\Kubernetes\\Minikube'
+    #TODO: Replace the string below with the proper installation location.
+    helm_install_path = 'C:\\'
     is_valid_install: bool
     helm_path: str
 
@@ -40,6 +41,7 @@ class helm_utility:
         return self.is_valid_install
 
     def get_helm_version(self):
+        #TODO: prints the string of the helm version, and returns the same string as printed.
         return
 
     def clean_helm(self):
@@ -49,7 +51,9 @@ class helm_utility:
         print('Helm cleaned!')
 
     def uninstall_helm(self):
+        #TODO: uninstalls helm from the system. Should use the path as stored in self.helm_install_path
         return
 
     def install_helm(self, PATH=os.getenv('PATH')):
+        #TODO: installs helm on the system. If the helm ececutable is already in the self.helm_install_path, do nothing.
         return
