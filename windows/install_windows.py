@@ -13,6 +13,7 @@ docker_url = "https://download.docker.com/win/stable/Docker%20Desktop%20Installe
 # Pathing variables.
 PATH = os.getenv('PATH')
 
+install_successful = False
 
 # Main function
 def install_win(args: argparse.ArgumentParser):
@@ -47,14 +48,27 @@ def install_win(args: argparse.ArgumentParser):
         print('Removing local data')
         minikube_util.clean_minikube()
 
-    print('----- END Minikube -----'+colors.reset)
+    print('----- END Minikube -----' + colors.reset)
 
-
-    print(colors.fg.green+'-----HELM------')
+    print(colors.fg.green + '-----Helm------')
     helm_util = windows.helm_utils.helm_utility()
     helm_installed, helm_path = helm_util.check_helm_installation()
     helm_util.clean_helm()
+    print('----- END Helm -----' + colors.reset)
 
+    print(colors.fg.blue + '-----Docker-----')
+    #TODO: Verify docker installation
+    print('----- END Docker -----' + colors.reset)
+
+    print(colors.fg.yellow+'-----Objectscale-----')
+    print('----- END Objectscale -----')
+
+    #TODO: implement validity check for installation
+    if install_successful:
+        print(' Installation complete! ')
+        print('use \'kubectl get pods\' to verify installation.')
+    else:
+        print('Installation failed. See output for details.')
 
 def is_admin() -> bool:
     run_as_admin = ctypes.windll.shell32.IsUserAnAdmin() != 0
