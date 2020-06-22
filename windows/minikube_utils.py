@@ -80,6 +80,7 @@ class minikube_utility:
             is_valid = self.find_minikube_in_PATH(PATH=PATH)
             if not is_valid:
                 print('Adding minikube to PATH.')
+                #NOTE: Find a way to persistently set the PATH variable AND get around the limit of 1024 characters
                 os.environ['PATH'] = PATH + ';' + self.minikube_install_path
             else:
                 print('Minikube installed and ready to use from the command line.')

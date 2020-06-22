@@ -64,33 +64,43 @@ def check_system_requirements(psutil):
 
     if cpu_count < requirement_cpu_count:
         print(
-        colorText.bold + 'WARNING: Found ' + str(cpu_count) + ' logical CPU cores, we recommend at least ' + str(requirement_cpu_count) + ' cores.\n'
-        'Your performance may suffer.'+ colorText.reset)
+            colorText.bold + 'WARNING: Found ' +
+            str(cpu_count) + ' logical CPU cores, we recommend at least ' +
+            str(requirement_cpu_count) + ' cores.\n'
+            'Your performance may suffer.' + colorText.reset)
     if ram_mb < requirement_ram_mb:
         print(
-            colorText.bold + 'WARNING: Found ' + str(ram_mb) + 'MB of RAM, we recommend at least ' + str(requirement_ram_mb) + 'MB of RAM.\n'
-        'Your performance will suffer.'+ colorText.reset)
+            colorText.bold + 'WARNING: Found ' +
+            str(ram_mb) + 'MB of RAM, we recommend at least ' +
+            str(requirement_ram_mb) + 'MB of RAM.\n'
+            'Your performance will suffer.' + colorText.reset)
     if ram_mb_free < requirement_ram_mb_free:
         print(
-            colorText.bold + 'WARNING: Found ' + str(ram_mb_free) + 'MB of free RAM, we recommend at least ' + str(requirement_ram_mb_free) + 'MB of free RAM.\n'
-        'Your performance may suffer.'+ colorText.reset)
+            colorText.bold + 'WARNING: Found ' +
+            str(ram_mb_free) + 'MB of free RAM, we recommend at least ' +
+            str(requirement_ram_mb_free) + 'MB of free RAM.\n'
+            'Your performance may suffer.' + colorText.reset)
     if disk_free_space_mb < requirement_disk_space_mb:
         print(
-            colorText.bold + 'WARNING: Found ' + str(disk_free_space_mb) + 'MB of free Disk Space, we recommend at least ' + str(requirement_disk_space_mb) + 'MB of free space.\n'
-        'Your performance may suffer.'+ colorText.reset)
+            colorText.bold + 'WARNING: Found ' +
+            str(disk_free_space_mb) + 'MB of free Disk Space, we recommend at least ' +
+            str(requirement_disk_space_mb) + 'MB of free space.\n'
+            'Your performance may suffer.' + colorText.reset)
     if disk_free_space_mb * 2 < requirement_disk_space_mb:
         print(
-            colorText.bold + 'Error: Disk space much too low to support a development environment. Please allocate more free space on your disk, and then run again.'+ colorText.reset)
-
+            colorText.bold + 'Error: Disk space much too low to support a development environment. Please allocate '
+                             'more free space on your disk (>'+requirement_disk_space_mb/2+' total), and then run again.' + colorText.reset)
+        exit(112)
 
 
 def main():
     print('Hello, Developer.')
+    print('-----Libraries & Prerequisites-----')
     args = arg_parsing.arg_cache.parse_cache()
     libmgr.get_libs()
     psutil = importlib.import_module('psutil')
-
     check_system_requirements(psutil)
+    print('----- END Libraries & Prerequisites -----')
     os = platform.system().casefold()
     if os.find('linux') > -1:
         install_tux()
@@ -99,7 +109,7 @@ def main():
     elif os.find('darwin') > -1:
         install_mac()
     else:
-        print("Unsupported OS: " + os)
+        print("Error: Unsupported OS: " + os)
 
 
 if __name__ == "__main__":
