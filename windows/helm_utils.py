@@ -43,7 +43,7 @@ class helm_utility:
         return self.is_valid_install
 
     def get_helm_version(self):
-        os.system('Helm version.')
+        os.system('Helm version')
         return
 
     def clean_helm(self):

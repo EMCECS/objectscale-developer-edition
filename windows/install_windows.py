@@ -4,6 +4,7 @@ import ctypes
 import argparse
 import arg_parsing.arg_cache
 import windows.minikube_utils
+import windows.objectscale_utils
 import windows.helm_utils
 
 # URLs for grabbing programs
@@ -51,6 +52,14 @@ def is_admin() -> bool:
 def install_objectscale(args: argparse.ArgumentParser):
     print(colors.fg.lightred + '-----Objectscale-----')
     # TODO: use helm to install objectscale
+    if args.token == 'NO TOKEN':
+        print('No Github token provided. Objectscale needs a token to install properly. Use the -t [Github token] flag to provide a token. See readme.md for more info.')
+        print('----- END Objectscale -----\n' + colors.reset)
+        return
+    objs_util = windows.objectscale_utils.objectscale_utility()
+    if not objs_util.check_objectscale_installation():
+        print('Installing Objectscale ECS cluster')
+        objs_util.install_objectscale(args.token)
     print('----- END Objectscale -----\n' + colors.reset)
 
 
