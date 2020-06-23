@@ -15,6 +15,7 @@ PATH = os.getenv('PATH')
 
 install_successful = False
 
+
 # Main function
 def install_win(args: argparse.ArgumentParser):
     print('Beginning install process for Windows.')
@@ -34,13 +35,12 @@ def install_win(args: argparse.ArgumentParser):
 
     verify_installation(args)
 
-    #TODO: implement validity check for installation
+    # TODO: implement validity check for installation
     if install_successful:
         print(' Installation complete! ')
         print('use \'kubectl get pods\' to verify installation.')
     else:
         print('Installation failed. See output for details.')
-
 
 
 def is_admin() -> bool:
@@ -49,13 +49,14 @@ def is_admin() -> bool:
 
 
 def install_objectscale(args: argparse.ArgumentParser):
-    print(colors.fg.lightred+'-----Objectscale-----')
-    #TODO: use helm to install objectscale
-    print('----- END Objectscale -----\n'+colors.reset)
+    print(colors.fg.lightred + '-----Objectscale-----')
+    # TODO: use helm to install objectscale
+    print('----- END Objectscale -----\n' + colors.reset)
+
 
 def install_docker(args: argparse.ArgumentParser):
     print(colors.fg.blue + '-----Docker-----')
-    #TODO: Verify docker installation
+    # TODO: Verify docker installation
     print('----- END Docker -----\n' + colors.reset)
 
 
@@ -65,11 +66,20 @@ def install_helm(args: argparse.ArgumentParser):
     helm_installed, helm_path = helm_util.check_helm_installation()
     if helm_installed and not (args.clean or args.helm_clean or args.helm_install):
         print('Helm found!')
-        print('Found at '+helm_util.helm_path)
+        print('Found at ' + helm_util.helm_path)
         helm_util.get_helm_version()
     elif not helm_installed:
         helm_util.install_helm()
-    #TODO: Finish Helm Logic
+
+    if args.helm_install:
+        print('minikube installed, now re-installing..')
+        helm_util.uninstall_helm()
+        helm_util.install_helm()
+
+    if args.clean or args.helm_clean:
+        print('Removing local data')
+        helm_util.clean_helm()
+
     print('----- END Helm -----\n' + colors.reset)
 
 

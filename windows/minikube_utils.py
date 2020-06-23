@@ -15,24 +15,25 @@ class minikube_utility:
         self.is_valid_install = False
 
     def check_minikube_installation(self, PATH=os.getenv('PATH')):
-        print('Verifying Minikube Installation')
+        print('Verifying Minikube installation.')
 
         self.is_valid_install = self.find_minikube_in_PATH(PATH=PATH)
 
         return self.is_valid_install, self.minikube_path
 
     def get_minikube_version(self):
-        result = subprocess.check_output('minikube version', shell=True)
+        result = subprocess.check_output('Minikube version', shell=True)
         result = result.decode(encoding='ascii')
         print(result)
         return result
 
     def clean_minikube(self):
         # Let minikube remove itself.
+        print('Cleaning Minikube.')
         os.system('minikube stop')
         os.system('minikube delete --all')
         os.system('minikube delete --purge')
-        print('minikube cleaned!')
+        print('Minikube cleaned.')
 
     def uninstall_minikube(self):
         # Note that this only removes the minikube EXE,
@@ -40,9 +41,9 @@ class minikube_utility:
         # This should always be called after running check_minikube_installation()
         if self.is_valid_install:
             os.system('del /F /Q \"' + self.minikube_path + '\\minikube.exe\"')
-            print('minikube deleted!')
+            print('Minikube deleted.')
         else:
-            print('minikube not found in PATH, skipping removal...')
+            print('Minikube not found in PATH, skipping removal...')
 
     def find_minikube_in_PATH(self, PATH=os.getenv('PATH')) -> bool:
 
@@ -68,18 +69,18 @@ class minikube_utility:
         current_path = os.getcwd()
         os.chdir(os.getenv('HOMEPATH') + '\\Downloads')
         if path.exists(os.getenv('HOMEPATH') + '\\Downloads\\minikube.exe'):
-            print('Deleting old installer')
+            print('Deleting old installer.')
             os.system('del /F /Q minikube.exe')
-        print('Starting Download')
+        print('Starting Download.')
         local_filename, headers = urllib.request.urlretrieve(self.minikube_url, 'minikube.exe')
-        print('Installing minikube')
+        print('Installing minikube.')
         os.system('MOVE /Y minikube.exe \"' + self.minikube_install_path + '\\minikube.exe\"')
 
         old_path = PATH
         try:
             is_valid = self.find_minikube_in_PATH(PATH=PATH)
             if not is_valid:
-                print('Adding minikube to PATH.')
+                print('Adding minikube to PATH..')
                 #NOTE: Find a way to persistently set the PATH variable AND get around the limit of 1024 characters
                 os.environ['PATH'] = PATH + ';' + self.minikube_install_path
             else:

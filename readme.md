@@ -22,7 +22,7 @@ If you would like to keep previous configurations for Minikube and Helm:
 
 ### Command Line Syntax:
 
- * ```-t```, ```--token```: Your github access token. To create a new token, go to Settings -> Seveloper settings -> Personal access tokens -> Generate new token. Access at minimum needs 'repo' and 'read:packages' permissions.
+ * ```-t```, ```--token```: Your github access token. To create a new token, go to Settings -> Developer settings -> Personal access tokens -> Generate new token. Access at minimum needs 'repo' and 'read:packages' permissions.
  * ```-c```, ```--clean```: Perform a clean installation wherein all dependancies are cleaned, uninstalled, and re-installed. Using this flag with other cleaning and installation flags is redundant.
  * ```-mi```: Perform a clean installation of Minikube, keeping all local files. Used to update Minikube.
  * ```-mc```: Perform a cleaning of Minikube, removing all local files, and recreating the Objectscale configuration. **Will delete all Minikube configurations, use with caution.**

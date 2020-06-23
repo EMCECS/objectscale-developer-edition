@@ -17,7 +17,7 @@ class helm_utility:
         self.is_valid_install = False
 
     def check_helm_installation(self, PATH=os.getenv('PATH')):
-        print('Verifying helm Installation')
+        print('Verifying helm Installation.')
 
         self.is_valid_install = self.find_helm_in_PATH(PATH=PATH)
 
@@ -43,22 +43,22 @@ class helm_utility:
         return self.is_valid_install
 
     def get_helm_version(self):
-        os.system('helm version')
+        os.system('Helm version.')
         return
 
     def clean_helm(self):
         # Let helm remove itself.
-        print('Cleaning helm installation')
+        print('Cleaning Helm installation.')
         os.system('helm ls --all --short | \"lib\\xargswin.exe\" -I{} \"helm delete {} --purge\"')
-        print('Helm cleaned!')
+        print('Helm cleaned.')
 
     def uninstall_helm(self):
         #TODO: uninstalls helm from the system. Should use the path as stored in self.helm_install_path
         if self.is_valid_install:
-            os.system('del /F /Q \"' + self.minikube_path + '\\helm.exe\"')
-            print('minikube deleted!')
+            os.system('del /F /Q \"' + self.helm_path + '\\helm.exe\"')
+            print('Helm deleted.')
         else:
-            print('minikube not found in PATH, skipping removal...')
+            print('Helm not found in PATH, skipping removal...')
         return
 
     def install_helm(self, PATH=os.getenv('PATH')):
@@ -68,7 +68,7 @@ class helm_utility:
         current_path = os.getcwd()
         os.chdir(os.getenv('HOMEPATH') + '\\Downloads')
         if not path.exists(os.getenv('HOMEPATH') + '\\Downloads\\helm-v2.16.9-windows-amd64.zip'):
-            print('Starting Download')
+            print('Starting Download.')
             local_filename, headers = urllib.request.urlretrieve(self.helm_url, 'helm-v2.16.9-windows-amd64.zip')
 
         if not path.exists(self.helm_install_path):
@@ -80,7 +80,7 @@ class helm_utility:
             zip = zipfile.ZipFile('helm-v2.16.9-windows-amd64.zip')
             zip.extractall(self.helm_install_path)
         except:
-            print('Problem unzipping helm')
+            print('Problem unzipping helm.')
 
         old_path = PATH
         try:
@@ -93,7 +93,7 @@ class helm_utility:
             else:
                 print('Helm installed and ready to use from the command line.')
         except:
-            print('Issue adding Helm to Path... reverting')
+            print('Issue adding Helm to Path... reverting.')
             print(sys.exc_info())
             os.environ['PATH'] = old_path
             return
