@@ -24,7 +24,6 @@ class minikube_utility:
     def get_minikube_version(self):
         result = subprocess.check_output('Minikube version', shell=True)
         result = result.decode(encoding='ascii')
-        print(result)
         return result
 
     def clean_minikube(self):
@@ -32,7 +31,21 @@ class minikube_utility:
         print('Cleaning Minikube.')
         os.system('minikube stop')
         os.system('minikube delete --all')
-        os.system('minikube delete --purge')
+        os.system('minikube config set memory 16384')
+        os.system('minikube config set cpus 4')
+        os.system('minikube config set vm-driver hyperv')
+        os.system('minikube config set disk-size 100G')
+        if not path.exists(os.getenv('HOMEPATH')+'\\.minikube'):
+            os.mkdir(os.getenv('HOMEPATH')+'\\.minikube')
+        if not path.exists(os.getenv('HOMEPATH')+'\\.minikube\\files'):
+            os.mkdir(os.getenv('HOMEPATH')+'\\.minikube\\files')
+        if not path.exists(os.getenv('HOMEPATH')+'\\.minikube\\files\\etc'):
+            os.mkdir(os.getenv('HOMEPATH')+'\\.minikube\\files\\etc')
+        if not path.exists(os.getenv('HOMEPATH')+'\\.minikube\\files\\etc\\ssl'):
+            os.mkdir(os.getenv('HOMEPATH')+'\\.minikube\\files\\etc\\ssl')
+        if not path.exists(os.getenv('HOMEPATH')+'\\.minikube\\files\\etc\\ssl\\certs'):
+            os.mkdir(os.getenv('HOMEPATH')+'\\.minikube\\files\\etc\\ssl\\certs')
+        os.system('ROBOCOPY certs '+os.getenv('HOMEPATH')+'\\.minikube\\files\\etc\\ssl\\certs *.pem')
         print('Minikube cleaned.')
 
     def uninstall_minikube(self):
@@ -40,7 +53,7 @@ class minikube_utility:
         # This should never be used before running clean_minikube()
         # This should always be called after running check_minikube_installation()
         if self.is_valid_install:
-            os.system('del /F /Q \"' + self.minikube_path + '\\minikube.exe\"')
+            os.system('del /F /Q "' + self.minikube_path + '\\minikube.exe"')
             print('Minikube deleted.')
         else:
             print('Minikube not found in PATH, skipping removal...')
@@ -87,4 +100,8 @@ class minikube_utility:
                 print('Minikube installed and ready to use from the command line.')
         except:
             os.environ['PATH'] = old_path
+
+        os.system('minikube config set memory 16384')
+        os.system('minikube config set cpus 4')
+        os.system('minikube config set vm-driver virtualbox')
         os.chdir(current_path)

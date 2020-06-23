@@ -30,18 +30,30 @@ class parse_cache:
                                  action='store_true',
                                  default=False,
                                  dest='minikube_install',
-                                 help='Reinstall the minikube system, even if currently installed.')
+                                 help='Reinstall the Minikube system, even if currently installed.')
 
         self.parser.add_argument('-hc', '--helmClean',
                                  action='store_true',
                                  default=False,
                                  dest='helm_clean',
-                                 help='Destroy current Minikube configuration and start fresh.')
+                                 help='Destroy current Helm configuration and start fresh.')
 
         self.parser.add_argument('-hi', '--helmInstall',
                                  action='store_true',
                                  default=False,
                                  dest='helm_install',
-                                 help='Reinstall the minikube system, even if currently installed.')
+                                 help='Reinstall the Helm system, even if currently installed.')
+
+        self.parser.add_argument('-ei', '--ECSInstall',
+                                 action='store_true',
+                                 default=False,
+                                 dest='ECS_install',
+                                 help='Reinstall ECS pods, and helm charts.')
+
+        self.parser.add_argument('-ec', '--ECSClean',
+                                 action='store_true',
+                                 default=False,
+                                 dest='ECS_clean',
+                                 help='Desctroy ECS cluster and remove all local data.')
 
         self.args = self.parser.parse_args()

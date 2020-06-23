@@ -3,6 +3,8 @@ import os.path
 import ctypes
 import argparse
 import arg_parsing.arg_cache
+import time
+import subprocess
 import windows.minikube_utils
 import windows.objectscale_utils
 import windows.helm_utils
@@ -13,9 +15,6 @@ docker_url = "https://download.docker.com/win/stable/Docker%20Desktop%20Installe
 
 # Pathing variables.
 PATH = os.getenv('PATH')
-
-install_successful = False
-
 
 # Main function
 def install_win(args: argparse.ArgumentParser):
@@ -30,13 +29,12 @@ def install_win(args: argparse.ArgumentParser):
 
     install_helm(args)
 
-    install_docker(args)
+    #install_docker(args)
 
     install_objectscale(args)
 
-    verify_installation(args)
+    install_successful = verify_installation(args)
 
-    # TODO: implement validity check for installation
     if install_successful:
         print(' Installation complete! ')
         print('use \'kubectl get pods\' to verify installation.')
@@ -53,12 +51,19 @@ def install_objectscale(args: argparse.ArgumentParser):
     print(colors.fg.lightred + '-----Objectscale-----')
     # TODO: use helm to install objectscale
     if args.token == 'NO TOKEN':
-        print('No Github token provided. Objectscale needs a token to install properly. Use the -t [Github token] flag to provide a token. See readme.md for more info.')
+        print(
+            'No Github token provided. Objectscale needs a token to install properly. Use the -t [Github token] flag to provide a token. See readme.md for more info.')
         print('----- END Objectscale -----\n' + colors.reset)
         return
     objs_util = windows.objectscale_utils.objectscale_utility()
-    if not objs_util.check_objectscale_installation():
-        print('Installing Objectscale ECS cluster')
+    if args.ECS_clean or args.clean:
+        objs_util.clean_objectscale()
+        objs_util.uninstall_objectscale()
+        objs_util.install_objectscale(args.token)
+    elif args.ECS_install:
+        objs_util.uninstall_objectscale()
+        objs_util.install_objectscale(args.token)
+    elif not objs_util.check_objectscale_installation():
         objs_util.install_objectscale(args.token)
     print('----- END Objectscale -----\n' + colors.reset)
 
@@ -118,12 +123,46 @@ def install_minikube(args: argparse.ArgumentParser):
 
 
 def verify_installation(args: argparse.ArgumentParser) -> bool:
-    print('Verifying installation')
-    isValidInstall = False
+    print(colors.fg.purple + '-----Verifying installation-----')
+    isValidInstall = True
+    # Give minikube some time to construct containers.
+    time.sleep(1)
 
+    if check_minikube() == False:
+        print(colors.bg.red+colors.bold+colors.fg.black+ 'Minikube not Found!'+colors.reset+colors.fg.purple)
+        isValidInstall = False
+    else:
+        print('Minikube installed correctly!')
+    if check_helm() == False:
+        print(colors.bg.red+colors.bold+colors.fg.black+ 'Helm not Found!'+colors.reset+colors.fg.purple)
+        isValidInstall = False
+    else:
+        print('Helm installed correctly!')
+    if check_objectscale() == False:
+        print(colors.bg.red+colors.bold+colors.fg.black+ 'Objectscale not Installing properly!'+colors.reset+colors.fg.purple)
+        isValidInstall = False
+    else:
+        print('Objectscale installed correctly!')
     # TODO: Validate install. Perhaps provide a diagnosis.
 
+    print('----- End Verification -----'+colors.reset)
     return isValidInstall
+
+
+def check_minikube() -> bool:
+    result = subprocess.check_output('minikube version', shell=True)
+    result = result.decode(encoding='ascii')
+    return result.find('minikube version: ') > -1
+
+
+def check_helm() -> bool:
+    result = subprocess.check_output('helm version', shell=True)
+    result = result.decode(encoding='ascii')
+    return result.find('version.BuildInfo{') > -1
+
+
+def check_objectscale() -> bool:
+    return  False
 
 
 class colors:

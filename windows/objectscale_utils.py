@@ -38,11 +38,16 @@ class objectscale_utility:
         print('objectscale Cleaned.')
 
     def uninstall_objectscale(self):
-        self.start_minikube_if_stoppped()
-        result = subprocess.check_output('Helm list | awk "{print $0}"', shell=True)
-        result = result.decode(encoding='ascii').lower()
-
         print('Uninstalling objectscale.')
+        self.start_minikube_if_stoppped()
+        result = subprocess.check_output('Helm list | "%CD%/lib_distr/gawk/awk.exe" "{print $1}"', shell=True)
+        result = result.decode(encoding='ascii').lower()
+        results = result.split('\n')
+        for s in results:
+            if not s.find('ecs-cluster') == -1:
+                os.system('helm uninstall '+s)
+            if not s.find('objs-mgr') == -1:
+                os.system('helm uninstall '+s)
 
     def install_objectscale(self, token: str, PATH=os.getenv('PATH')):
         print('Installing objectscale.')
@@ -50,11 +55,11 @@ class objectscale_utility:
         result = subprocess.check_output('Helm repo list', shell=True)
         result = result.decode(encoding='ascii').lower()
         if result.find('deos') == -1:
-            print('Installing deos repo...')
+            print('Installing deos repo')
             os.system('helm repo add deos '+self.helm_chart_url.replace('^',token))
             os.system('helm repo update')
         if result.find('objectscale-helm-dev') == -1:
-            print('Installing objectscale...')
+            print('Installing objectscale helm dev repo')
             os.system('helm install objs-mgr deos/objectscale-manager --set global.registry=objectscale')
             os.system('helm install deos/ecs-cluster --set global.registry=objectscale --generate-name --set storageServer.persistence.size=100Gi --set performanceProfile=Micro --set provision.enabled=True --set storageServer.persistence.protected=True --set enableAdvancedStatistics=False --set managementGateway.service.type=NodePort --set s3.service.type=NodePort')
             return
@@ -62,9 +67,9 @@ class objectscale_utility:
 
 
     def start_minikube_if_stoppped(self):
-        result = subprocess.check_output('Minikube status', shell=True)
-        result = result.decode(encoding='ascii')
-        if result.lower().find('host: running') == -1:
+        try:
+            result = subprocess.check_output('Minikube status', shell=True)
+        except:
             print('Starting Minikube')
             os.system('minikube start')
 

@@ -39,3 +39,18 @@ def get_libs():
     except:
         print('Psutil not found, installing...')
         os.system('pip3 install psutil')
+
+    print('Checking for certs')
+    if not path.exists('certs'):
+        print('No certificates exist in certs folder.')
+        print('Please put the proper certificates in PEM format into \'certs\'')
+    elif len(os.listdir('certs')) == 0:
+        print('No certificates exist in certs folder.')
+        print('Please put the proper certificates in PEM format into \'certs\'')
+    else:
+        i = 0
+        for file in os.listdir('certs'):
+            if file.find('.pem') > -1:
+                i += 1
+        print('Found '+str(i)+' certs.')
+
