@@ -1,3 +1,4 @@
+import os
 import argparse
 
 
@@ -56,4 +57,21 @@ class parse_cache:
                                  dest='ECS_clean',
                                  help='Destroy ECS cluster and remove all local data.')
 
+        self.parser.add_argument('-pc', '--pull-certs',
+                                 action='store_true',
+                                 default=False,
+                                 dest='pull_certs',
+                                 help='(Windows only) attempt to automatically pull SSL certificate files from the registry.')
+
+        self.parser.add_argument('-pcf', '--pull-certs-force',
+                                 action='store_true',
+                                 default=False,
+                                 dest='pull_certs_force',
+                                 help='(Windows only) pull certificates, even if they already exist in the certs folder.')
+
         self.args = self.parser.parse_args()
+
+    @staticmethod
+    def getFolderDirectory() -> str:
+        path = os.path.dirname(os.path.realpath(__file__))[:-12]
+        return path

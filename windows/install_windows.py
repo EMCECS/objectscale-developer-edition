@@ -1,8 +1,6 @@
 import os
-from os import path
 import ctypes
 import argparse
-import arg_parsing.arg_cache
 import time
 import subprocess
 import windows.minikube_utils
@@ -22,15 +20,17 @@ def install_win(args: argparse.ArgumentParser, certs_found: bool):
         print('This installer needs to be run as an ' + colors.bold + 'admin.' + colors.reset)
         return
 
+    print(os.getcwd())
+
     install_certs(args)
 
-    install_minikube(args)
+    #install_minikube(args)
 
-    install_helm(args)
+    #install_helm(args)
 
-    install_docker(args)
+    #install_docker(args)
 
-    install_objectscale(args)
+    #install_objectscale(args)
 
     install_successful = verify_installation(args)
 
@@ -121,19 +121,24 @@ def install_minikube(args: argparse.ArgumentParser):
     print('----- END Minikube -----\n' + colors.reset)
 
 
-def install_certs(args, certs_found: bool):
+def install_certs(args: argparse.ArgumentParser):
     cert_manager = windows.cert_utils.cert_utility()
     print(colors.fg.yellow + "-----Certificates (Windows)-----")
     cert_manager.make_certs_folder()
     pem_certs_found, cer_certs_found = cert_manager.count_certs()
-    if pem_certs_found == 0 and cer_certs_found == 0:
+    if pem_certs_found == 0 and cer_certs_found == 0 and not (args.pull_certs or args.pull_certs_force):
         print('Certs not detected, helm charts and images may not pull properly.')
         print('On windows, use the --pull-certs flag to automatically fetch the certs,')
         print('or place the certificates by hand into the certs folder.')
-    elif pem_certs_found + cer_certs_found < cert_manager.certs_expected:
-        print('Found ' + str(cer_certs_found+pem_certs_found) + ', expected '+cert_manager.certs_expected)
+    elif pem_certs_found + cer_certs_found < cert_manager.certs_expected and not (args.pull_certs or args.pull_certs_force):
+        print('Found ' + str(cer_certs_found+pem_certs_found) + ', expected ' + str(cert_manager.certs_expected))
+        print('Not having the proper certificates may cause connectivity issues within the VM')
         print('If connectivity problems persist, run this installer with the --pull-certs ')
         print('flag to attempt to automatically pull certs.')
+    elif args.pull_certs or args.pull_certs_force:
+        print('Found ' + str(cer_certs_found + pem_certs_found) + ', expected ' + str(cert_manager.certs_expected))
+        print('Pulling certificates')
+        cert_manager.pull_certs(args.pull_certs_force)
     else:
         print('Certs found in folder.')
 
