@@ -44,16 +44,16 @@ class parse_cache:
                                  dest='helm_install',
                                  help='Reinstall the Helm system, even if currently installed.')
 
-        self.parser.add_argument('-ei', '--ECSInstall',
+        self.parser.add_argument('-oi', '--ObjectscaleInstall',
                                  action='store_true',
                                  default=False,
                                  dest='ECS_install',
                                  help='Reinstall ECS pods, and helm charts.')
 
-        self.parser.add_argument('-ec', '--ECSClean',
+        self.parser.add_argument('-oc', '--ObjectscaleClean',
                                  action='store_true',
                                  default=False,
                                  dest='ECS_clean',
-                                 help='Desctroy ECS cluster and remove all local data.')
+                                 help='Destroy ECS cluster and remove all local data.')
 
         self.args = self.parser.parse_args()

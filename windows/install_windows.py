@@ -1,5 +1,5 @@
 import os
-import os.path
+from os import path
 import ctypes
 import argparse
 import arg_parsing.arg_cache
@@ -8,16 +8,13 @@ import subprocess
 import windows.minikube_utils
 import windows.objectscale_utils
 import windows.helm_utils
-
-# URLs for grabbing programs
-deos_url = "raw.githubusercontent.com/emecs/charts/master/docs"
-docker_url = "https://download.docker.com/win/stable/Docker%20Desktop%20Installer.exe"
+import windows.cert_utils
 
 # Pathing variables.
 PATH = os.getenv('PATH')
 
 # Main function
-def install_win(args: argparse.ArgumentParser):
+def install_win(args: argparse.ArgumentParser, certs_found: bool):
     print('Beginning install process for Windows.')
 
     # Check for UAC elevation.
@@ -25,11 +22,13 @@ def install_win(args: argparse.ArgumentParser):
         print('This installer needs to be run as an ' + colors.bold + 'admin.' + colors.reset)
         return
 
+    install_certs(args)
+
     install_minikube(args)
 
     install_helm(args)
 
-    #install_docker(args)
+    install_docker(args)
 
     install_objectscale(args)
 
@@ -122,30 +121,50 @@ def install_minikube(args: argparse.ArgumentParser):
     print('----- END Minikube -----\n' + colors.reset)
 
 
+def install_certs(args, certs_found: bool):
+    cert_manager = windows.cert_utils.cert_utility()
+    print(colors.fg.yellow + "-----Certificates (Windows)-----")
+    cert_manager.make_certs_folder()
+    pem_certs_found, cer_certs_found = cert_manager.count_certs()
+    if pem_certs_found == 0 and cer_certs_found == 0:
+        print('Certs not detected, helm charts and images may not pull properly.')
+        print('On windows, use the --pull-certs flag to automatically fetch the certs,')
+        print('or place the certificates by hand into the certs folder.')
+    elif pem_certs_found + cer_certs_found < cert_manager.certs_expected:
+        print('Found ' + str(cer_certs_found+pem_certs_found) + ', expected '+cert_manager.certs_expected)
+        print('If connectivity problems persist, run this installer with the --pull-certs ')
+        print('flag to attempt to automatically pull certs.')
+    else:
+        print('Certs found in folder.')
+
+    print("----- End Certificates (Windows) -----" + colors.reset)
+
+
 def verify_installation(args: argparse.ArgumentParser) -> bool:
     print(colors.fg.purple + '-----Verifying installation-----')
     isValidInstall = True
     # Give minikube some time to construct containers.
     time.sleep(1)
 
-    if check_minikube() == False:
-        print(colors.bg.red+colors.bold+colors.fg.black+ 'Minikube not Found!'+colors.reset+colors.fg.purple)
+    if not check_minikube():
+        print(colors.bg.red + colors.bold + colors.fg.black + 'Minikube not Found!' + colors.reset + colors.fg.purple)
         isValidInstall = False
     else:
         print('Minikube installed correctly!')
-    if check_helm() == False:
-        print(colors.bg.red+colors.bold+colors.fg.black+ 'Helm not Found!'+colors.reset+colors.fg.purple)
+    if not check_helm():
+        print(colors.bg.red + colors.bold + colors.fg.black + 'Helm not Found!' + colors.reset + colors.fg.purple)
         isValidInstall = False
     else:
         print('Helm installed correctly!')
-    if check_objectscale() == False:
-        print(colors.bg.red+colors.bold+colors.fg.black+ 'Objectscale not Installing properly!'+colors.reset+colors.fg.purple)
+    if not check_objectscale():
+        print(
+            colors.bg.red + colors.bold + colors.fg.black + 'Objectscale not Installing properly!' + colors.reset + colors.fg.purple)
         isValidInstall = False
     else:
         print('Objectscale installed correctly!')
     # TODO: Validate install. Perhaps provide a diagnosis.
 
-    print('----- End Verification -----'+colors.reset)
+    print('----- End Verification -----' + colors.reset)
     return isValidInstall
 
 
@@ -162,7 +181,7 @@ def check_helm() -> bool:
 
 
 def check_objectscale() -> bool:
-    return  False
+    return False
 
 
 class colors:

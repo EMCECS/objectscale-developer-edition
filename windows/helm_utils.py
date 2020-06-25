@@ -62,7 +62,7 @@ class helm_utility:
         return
 
     def install_helm(self, PATH=os.getenv('PATH')):
-        #TODO: installs helm on the system. If the helm ececutable is already in the self.helm_install_path, do nothing.
+        #Installs helm on the system. If the helm ececutable is already in the self.helm_install_path, do nothing.
 
         # Change to user downloads folder
         current_path = os.getcwd()
@@ -87,9 +87,9 @@ class helm_utility:
             is_valid = self.find_helm_in_PATH(PATH=PATH)
             if not is_valid:
                 print('Adding Helm to PATH.')
-                #NOTE: Find a way to persistently set the PATH variable AND get around the limit of 1024 characters
+                #TODO: Find a way to persistently set the PATH variable AND get around the limit of 1024 characters
+
                 os.environ['PATH'] = PATH + ';C:\\' + self.helm_install_path
-                #print(os.getenv('PATH'))
             else:
                 print('Helm installed and ready to use from the command line.')
         except:

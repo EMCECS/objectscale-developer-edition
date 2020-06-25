@@ -14,7 +14,7 @@ class objectscale_utility:
         self.is_valid_install = False
 
     def check_objectscale_installation(self, PATH=os.getenv('PATH')) -> bool:
-        print('Verifying objectscale Installation.')
+        print('Verifying Objectscale Installation.')
         self.start_minikube_if_stoppped()
         result = subprocess.check_output('Helm repo list', shell=True)
         result = result.decode(encoding='ascii').lower()
@@ -24,18 +24,18 @@ class objectscale_utility:
         if result.find('objectscale-manager') == -1:
             print('Objectscale not installed')
             return False
-        print('All objectscale components running, Install not necessary')
+        print('All Objectscale components running, Install not necessary')
         return True
 
 
     def get_objectscale_version(self):
-        print('objectscale version.')
+        print('Objectscale version.')
         self.start_minikube_if_stoppped()
 
     def clean_objectscale(self):
         print('Cleaning objectscale.')
         self.start_minikube_if_stoppped()
-        print('objectscale Cleaned.')
+        print('Objectscale Cleaned.')
 
     def uninstall_objectscale(self):
         print('Uninstalling objectscale.')
@@ -50,16 +50,16 @@ class objectscale_utility:
                 os.system('helm uninstall '+s)
 
     def install_objectscale(self, token: str, PATH=os.getenv('PATH')):
-        print('Installing objectscale.')
+        print('Installing Objectscale.')
         self.start_minikube_if_stoppped()
         result = subprocess.check_output('Helm repo list', shell=True)
         result = result.decode(encoding='ascii').lower()
         if result.find('deos') == -1:
-            print('Installing deos repo')
+            print('Installing Deos repo')
             os.system('helm repo add deos '+self.helm_chart_url.replace('^',token))
             os.system('helm repo update')
         if result.find('objectscale-helm-dev') == -1:
-            print('Installing objectscale helm dev repo')
+            print('Installing Objectscale helm dev repo')
             os.system('helm install objs-mgr deos/objectscale-manager --set global.registry=objectscale')
             os.system('helm install deos/ecs-cluster --set global.registry=objectscale --generate-name --set storageServer.persistence.size=100Gi --set performanceProfile=Micro --set provision.enabled=True --set storageServer.persistence.protected=True --set enableAdvancedStatistics=False --set managementGateway.service.type=NodePort --set s3.service.type=NodePort')
             return
