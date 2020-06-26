@@ -32,7 +32,7 @@ class libmgr():
             os.system('python pip.py')
             os.remove('pip.py')
 
-        print('Checking for psutil')
+        print('Checking for psutil.')
         # noinspection PyBroadException
         try:
             subprocess.check_output(['pip3', 'show', 'psutil'], stderr=subprocess.DEVNULL,
@@ -41,4 +41,16 @@ class libmgr():
         except:
             print('Psutil not found, installing...')
             os.system('pip3 install psutil')
+
+        print('Checking for OpenSSL.')
+        # noinspection PyBroadException
+        try:
+            subprocess.check_output(['pip3', 'show', 'pyOpenSSL'], stderr=subprocess.DEVNULL,
+                                                           shell=True)
+            print('OpenSSL installed.')
+        except:
+            print('OpenSSL not found, installing...')
+            os.system('pip3 install pyOpenSSL')
+
+
 

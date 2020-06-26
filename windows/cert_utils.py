@@ -2,7 +2,7 @@ import os
 from os import path
 import subprocess
 import re
-import argparse
+import importlib
 
 
 class cert_utility:
@@ -93,4 +93,22 @@ class cert_utility:
                     continue
             elif not force:
                 print(key.replace(' ', '_') + '.cer already exists, skipping.')
+
+    def convert_certs(self):
+        openSSL = importlib.import_module('OpenSSL')
+
+        file_type_in = openSSL.crypto.FILETYPE_ASN1
+        file_type_out = openSSL.crypto.FILETYPE_PEM
+
+        files = os.listdir(self.certs_folder)
+        cerfiles = []
+        for file in files:
+            if file.find('.cer') > -1 or file.find('crt') > -1:
+                cerfiles.append(file)
+        for cerfile in cerfiles:
+            #cerfile_stream = open(self.certs_folder+'\\'+cerfile).read()
+            cer = openSSL.crypto.load_certificate(open(self.certs_folder+'\\'+cerfile).read(), file_type_in)
+            openSSL.crypto.dump_certificate(cer, file_type_out)
+
+
 

@@ -69,6 +69,12 @@ class parse_cache:
                                  dest='pull_certs_force',
                                  help='(Windows only) pull certificates, even if they already exist in the certs folder.')
 
+        self.parser.add_argument('-pcn', '--no-convert',
+                                 action='store_true',
+                                 default=False,
+                                 dest='pull_certs_no_convert',
+                                 help='(Windows only) pull certificates, but do not convert them from CER to PEM. This will prevent them from being copied to Minikube.')
+
         self.args = self.parser.parse_args()
 
     @staticmethod
