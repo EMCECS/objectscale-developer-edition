@@ -45,7 +45,7 @@ class minikube_utility:
             os.mkdir(os.getenv('HOMEPATH')+'\\.minikube\\files\\etc\\ssl')
         if not path.exists(os.getenv('HOMEPATH')+'\\.minikube\\files\\etc\\ssl\\certs'):
             os.mkdir(os.getenv('HOMEPATH')+'\\.minikube\\files\\etc\\ssl\\certs')
-        os.system('ROBOCOPY certs '+os.getenv('HOMEPATH')+'\\.minikube\\files\\etc\\ssl\\certs *.pem')
+        #os.system('ROBOCOPY certs '+os.getenv('HOMEPATH')+'\\.minikube\\files\\etc\\ssl\\certs *.pem')
         print('Minikube cleaned.')
 
     def uninstall_minikube(self):

@@ -24,13 +24,13 @@ def install_win(args: argparse.ArgumentParser, certs_found: bool):
 
     install_certs(args)
 
-    #install_minikube(args)
+    install_minikube(args)
 
-    #install_helm(args)
+    install_helm(args)
 
-    #install_docker(args)
+    install_docker(args)
 
-    #install_objectscale(args)
+    install_objectscale(args)
 
     install_successful = verify_installation(args)
 
@@ -131,22 +131,25 @@ def install_certs(args: argparse.ArgumentParser):
         print('On windows, use the --pull-certs flag to automatically fetch the certs,')
         print('or place the certificates by hand into the certs folder.')
     elif pem_certs_found + cer_certs_found < cert_manager.certs_expected and not (args.pull_certs or args.pull_certs_force):
-        print('Found ' + str(cer_certs_found+pem_certs_found) + ', expected minimum ' + str(cert_manager.certs_expected))
-        print('Not having the proper certificates may cause connectivity issues within the VM')
+        print('Found ' + str(cer_certs_found+pem_certs_found) + ', expected minimum ' + str(cert_manager.certs_expected)+'.')
+        print('Not having the proper certificates may cause connectivity issues within the VM.')
         print('If connectivity problems persist, run this installer with the --pull-certs ')
         print('flag to attempt to automatically pull certs.')
     elif (args.pull_certs and pem_certs_found == 0 and cer_certs_found == 0) or args.pull_certs_force:
-        print('Found ' + str(cer_certs_found + pem_certs_found) + ', expected minimum ' + str(cert_manager.certs_expected))
+        print('Found ' + str(cer_certs_found + pem_certs_found) + ', expected minimum ' + str(cert_manager.certs_expected)+'.')
         print('Pulling certificates')
-    else:
-        print('Certs found in folder.')
-
         cert_manager.pull_certs(args.pull_certs_force)
+    else:
+        print('Certificates found in folder.')
+
     if (args.pull_certs_force or cer_certs_found > 0 or (args.pull_certs and pem_certs_found == 0 and cer_certs_found == 0)) and not args.pull_certs_no_convert:
         print('Converting certificates to PEM format.')
         cert_manager.convert_certs()
     elif (args.pull_certs_force or cer_certs_found > 0 or (args.pull_certs and pem_certs_found == 0 and cer_certs_found == 0)) and args.pull_certs_no_convert:
         print('No convert flag specified, skipping conversion.')
+
+    print('Copying certificates to minikube.')
+    cert_manager.move_certs_to_minikube()
     print("----- End Certificates (Windows) -----" + colors.reset)
 
 
@@ -168,7 +171,7 @@ def verify_installation(args: argparse.ArgumentParser) -> bool:
         print('Helm installed correctly!')
     if not check_objectscale():
         print(
-            colors.bg.red + colors.bold + colors.fg.black + 'Objectscale not Installing properly!' + colors.reset + colors.fg.purple)
+            colors.bg.red + colors.bold + colors.fg.black + 'Objectscale not Installed properly!' + colors.reset + colors.fg.purple)
         isValidInstall = False
     else:
         print('Objectscale installed correctly!')

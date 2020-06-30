@@ -3,6 +3,7 @@ from os import path
 import subprocess
 import re
 import importlib
+import shutil
 
 
 class cert_utility:
@@ -14,7 +15,7 @@ class cert_utility:
     thumbprint_query_regex = 'Thumbprint.*: [\d|A-F|a-f]{40}'
 
     def __init__(self):
-        self.certs_folder = self.working_folder+'\\certs'
+        self.certs_folder = self.working_folder + '\\certs'
         return
 
     def make_certs_folder(self):
@@ -58,36 +59,42 @@ class cert_utility:
                 cert_dict[name] = fingerprint
 
         if len(cert_dict.keys()) < 1:
-            print('No certificates found during automatic pull, you must get the following certificates, and place them in the certs folder.')
+            print(
+                'No certificates found during automatic pull, you must get the following certificates, and place them in the certs folder.')
             print('EMC Root CA')
             print('EMC SSL CA')
             print('EMC SSL Decryption Authority')
             print('EMC SSL Decryption Authority v2')
             print('One may find these certificates by running certmgr.msc, found under'
                   'Trusted Root Certification Authorities/Certificates, and '
-                  'Intermediate Certification Authorities/Certificates')
+                  'Intermediate Certification Authorities/Certificates.')
             return
 
         print(str(len(cert_dict.keys())) + ' unique certificates found.')
         print('Exporting certificates, this may take a minute.')
         # For every key, export it to the certs folder.
         for key in cert_dict.keys():
-            if force or not path.exists(path.join(self.certs_folder, key.replace(' ','_')+'.cer')):
+            cerfile = path.join(self.certs_folder, key.replace(' ', '_') + '.cer')
+            pemfile = path.join(self.certs_folder, key.replace(' ', '_') + '.pem')
+
+            # If neither the cer file nor the pem file exists OR the force flag is specified.
+            if not (path.exists(cerfile) or path.exists(pemfile)) or force:
                 try:
+                    # Export the certificate.
                     command = [self.powershell,
-                           '$cert',
-                           '=',
-                           'Get-ChildItem',
-                           '-Path',
-                           'cert:\\CurrentUser\\*\\' + cert_dict[key],
-                           ';',
-                           'Export-Certificate',
-                           '-Cert',
-                           '$cert[0]',
-                           '-FilePath',
-                           '\"' + self.certs_folder + '\\' + key.replace(' ','_') + '.cer\"',
-                           '-Type',
-                           'cer']
+                               '$cert',
+                               '=',
+                               'Get-ChildItem',
+                               '-Path',
+                               'cert:\\CurrentUser\\*\\' + cert_dict[key],
+                               ';',
+                               'Export-Certificate',
+                               '-Cert',
+                               '$cert[0]',
+                               '-FilePath',
+                               '\"' + self.certs_folder + '\\' + key.replace(' ', '_') + '.cer\"',
+                               '-Type',
+                               'cer']
                     result = subprocess.check_output(command, shell=True)
                 except:
                     continue
@@ -106,9 +113,27 @@ class cert_utility:
             if file.find('.cer') > -1 or file.find('crt') > -1:
                 cerfiles.append(file)
         for cerfile in cerfiles:
-            #cerfile_stream = open(self.certs_folder+'\\'+cerfile).read()
-            cer = openSSL.crypto.load_certificate(open(self.certs_folder+'\\'+cerfile).read(), file_type_in)
-            openSSL.crypto.dump_certificate(cer, file_type_out)
+            pemfile = cerfile[:-4] + '.pem'
+            cer = openSSL.crypto.load_certificate(file_type_in, open(self.certs_folder + '\\' + cerfile, 'rb').read())
+            pem_file = open(self.certs_folder + '\\' + pemfile, 'wt')
+            pem_file.write(openSSL.crypto.dump_certificate(file_type_out, cer).decode('utf-8'))
 
+        print('Successfully converted '+str(len(cerfiles))+' certificates to PEM format.')
 
+    def move_certs_to_minikube(self):
+        minikube_cert_path = path.join(os.getenv('HOMEPATH'), '.minikube', 'files', 'etc', 'ssl', 'certs')
+        # Creates the certs folder if it does not exist.
+        if not path.exists(minikube_cert_path):
+            os.makedirs(minikube_cert_path)
+
+        # Find all pem files in the certs folder.
+        files = os.listdir(self.certs_folder)
+        pemfiles = []
+        for file in files:
+            if file.find('.pem') > -1:
+                pemfiles.append(file)
+        for pemfile in pemfiles:
+            shutil.copy2(path.join(self.certs_folder, pemfile), path.join(minikube_cert_path, pemfile))
+
+        print('Copied '+str(len(pemfiles))+' cert files to minikube config folder.')
 
