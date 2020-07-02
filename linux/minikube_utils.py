@@ -27,5 +27,6 @@ class minikube_utility:
 		subprocess.run(['minikube', 'delete'])
 		subprocess.run(['docker', 'stop'])
 		subprocess.run(['rm', '-r', '~/.kube', '~/.minikube'])
-		subprocess.run(['sudo', 'rm', '/usr/local/bin/localkube', '/usr/local/bin/minikube'])
+		subprocess.run(['sudo', 'rm', '/usr/local/bin/localkube'])
+		subprocess.run(['sudo', 'rm', '/usr/local/bin/minikube'])
 		print("Cleaning Minikube complete.")

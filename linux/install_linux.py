@@ -18,6 +18,7 @@ def install_tux(args: argparse.ArgumentParser):
     execute_minikube(args)
     execute_kubectl(args)
     execute_helm(args)
+    execute_objectscale(args)
 
 def execute_docker(args: argparse.ArgumentParser):
     docker_util = docker_utils.docker_utility()
@@ -55,6 +56,22 @@ def execute_minikube(args: argparse.ArgumentParser):
 
     # Start install
     minikube_util.install_minikube()
+
+def execute_objectscale(args: argparse.ArgumentParser):
+    print('-----Objectscale-----')
+    # TODO: use helm to install objectscale
+    if args.token == 'NO TOKEN':
+        print(
+            'No Github token provided. Objectscale needs a token to install properly. Use the -t [Github token] flag to provide a token. See readme.md for more info.')
+        print('----- END Objectscale -----\n')
+        return
+    objs_util = objectscale_utils.objectscale_utility()
+    if args.ECS_clean or args.clean:
+        objs_util.clean_objectscale()
+        objs_util.uninstall_objectscale()
+
+    objs_util.install_objectscale(args.token)
+    print('----- END Objectscale -----\n')
 
 def verify_installation():
     print('Verifying installation')
