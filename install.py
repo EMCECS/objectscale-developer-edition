@@ -104,7 +104,7 @@ def main():
     print('----- END Libraries & Prerequisites -----')
     os = platform.system().casefold()
     if os.find('linux') > -1:
-        install_tux()
+        install_tux(args.args)
     elif os.find('windows') > -1:
         install_win(args.args, manager.certs_found)
     elif os.find('darwin') > -1:
