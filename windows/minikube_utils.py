@@ -6,7 +6,7 @@ import urllib.request
 
 class minikube_utility:
     minikube_url = "https://github.com/kubernetes/minikube/releases/download/v1.11.0/minikube-windows-amd64.exe"
-    minikube_install_path = 'C:\\Program Files\\Kubernetes\\Minikube'
+    minikube_install_path = 'C:\\WINDOWS\\system32'
     minikube_path: str
     is_valid_install: bool
 

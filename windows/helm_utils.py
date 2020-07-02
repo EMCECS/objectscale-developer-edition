@@ -6,9 +6,9 @@ import sys
 import urllib.request
 
 class helm_utility:
-    helm_url = "https://get.helm.sh/helm-v2.16.9-windows-amd64.zip"
+    helm_url = "https://get.helm.sh/helm-v3.2.4-windows-amd64.zip"
     #TODO: Replace the string below with the proper installation location.
-    helm_install_path = os.getenv('HOMEPATH') +'\\HELM'
+    helm_install_path = 'C:\\WINDOWS\\system32'
     is_valid_install: bool
     helm_path: str
 
@@ -69,16 +69,15 @@ class helm_utility:
         os.chdir(os.getenv('HOMEPATH') + '\\Downloads')
         if not path.exists(os.getenv('HOMEPATH') + '\\Downloads\\helm-v2.16.9-windows-amd64.zip'):
             print('Starting Download.')
-            local_filename, headers = urllib.request.urlretrieve(self.helm_url, 'helm-v2.16.9-windows-amd64.zip')
+            local_filename, headers = urllib.request.urlretrieve(self.helm_url, os.getenv('HOMEPATH') + '\\Downloads\\helm-v2.16.9-windows-amd64.zip')
 
         if not path.exists(self.helm_install_path):
             os.mkdir(self.helm_install_path)
-        os.system('MOVE /Y helm-v2.16.9-windows-amd64.zip \"' + self.helm_install_path + '\\helm-v2.16.9-windows-amd64.zip\"')
-        os.chdir(self.helm_install_path)
 
         try:
-            zip = zipfile.ZipFile('helm-v2.16.9-windows-amd64.zip')
-            zip.extractall(self.helm_install_path)
+            zip = zipfile.ZipFile(os.getenv('HOMEPATH') + '\\Downloads\\helm-v2.16.9-windows-amd64.zip')
+            zip.extractall(os.getenv('HOMEPATH') + '\\Downloads\\helm-v2.16.9-windows-amd64')
+            os.system('ROBOCOPY \"' + os.getenv('HOMEPATH') + '\\Downloads\\helm-v2.16.9-windows-amd64\\windows-amd64\" C:\\Windows\\System32 /NDL /NFL')
         except:
             print('Problem unzipping helm.')
 

@@ -16,6 +16,7 @@ class objectscale_utility:
     def check_objectscale_installation(self, PATH=os.getenv('PATH')) -> bool:
         print('Verifying Objectscale Installation.')
         self.start_minikube_if_stoppped()
+        result = subprocess.check_output('Helm init', shell=True)
         result = subprocess.check_output('Helm repo list', shell=True)
         result = result.decode(encoding='ascii').lower()
         if result.find('ecs-cluster') == -1:
@@ -54,14 +55,13 @@ class objectscale_utility:
         self.start_minikube_if_stoppped()
         result = subprocess.check_output('Helm repo list', shell=True)
         result = result.decode(encoding='ascii').lower()
-        if result.find('deos') == -1:
-            print('Installing Deos repo')
-            os.system('helm repo add deos '+self.helm_chart_url.replace('^',token))
-            os.system('helm repo update')
+        print('Installing Deos repo')
+        os.system('helm repo add ecs '+self.helm_chart_url.replace('^',token))
+        os.system('helm repo update')
         if result.find('objectscale-helm-dev') == -1:
             print('Installing Objectscale helm dev repo')
-            os.system('helm install objs-mgr deos/objectscale-manager --set global.registry=objectscale')
-            os.system('helm install deos/ecs-cluster --set global.registry=objectscale --generate-name --set storageServer.persistence.size=100Gi --set performanceProfile=Micro --set provision.enabled=True --set storageServer.persistence.protected=True --set enableAdvancedStatistics=False --set managementGateway.service.type=NodePort --set s3.service.type=NodePort')
+            os.system('helm install objs-mgr ecs/objectscale-manager --set global.registry=objectscale')
+            os.system('helm install ecs/ecs-cluster --set global.registry=objectscale --generate-name --set storageServer.persistence.size=100Gi --set performanceProfile=Micro --set provision.enabled=True --set storageServer.persistence.protected=True --set enableAdvancedStatistics=False --set managementGateway.service.type=NodePort --set s3.service.type=NodePort')
             return
 
 
@@ -71,6 +71,6 @@ class objectscale_utility:
             result = subprocess.check_output('Minikube status', shell=True)
         except:
             print('Starting Minikube')
-            os.system('minikube start')
+            os.system('minikube start --vm-driver=hyperv')
 
 

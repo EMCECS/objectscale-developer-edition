@@ -85,7 +85,7 @@ def install_helm(args: argparse.ArgumentParser):
         helm_util.install_helm()
 
     if args.helm_install:
-        print('minikube installed, now re-installing..')
+        print('Helm installed, now re-installing..')
         helm_util.uninstall_helm()
         helm_util.install_helm()
 
@@ -190,7 +190,7 @@ def check_minikube() -> bool:
 def check_helm() -> bool:
     result = subprocess.check_output('helm version', shell=True)
     result = result.decode(encoding='ascii')
-    return result.find('version.BuildInfo{') > -1
+    return result.find('version.version{') > -1
 
 
 def check_objectscale() -> bool:
