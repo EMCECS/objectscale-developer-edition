@@ -1,14 +1,11 @@
 # This is the main installation script, meant to be run
-# by the developer on any OS to install [minikube and ECS, or just ECS on minikube?]
+# by the developer on any OS to install
 import platform
 import libmgr
 import os
 import shutil
 import arg_parsing.arg_cache
 import importlib
-from windows.install_windows import install_win
-from linux.install_linux import install_tux
-from macos.install_macos import install_mac
 
 requirement_cpu_count = 4
 requirement_ram_mb = 16384
@@ -104,11 +101,14 @@ def main():
     print('----- END Libraries & Prerequisites -----')
     os = platform.system().casefold()
     if os.find('linux') > -1:
-        install_tux(args.args)
+        tux_installer = importlib.import_module('linux.install_linux')
+        tux_installer.install_tux(args.args)
     elif os.find('windows') > -1:
-        install_win(args.args, manager.certs_found)
+        windows_installer = importlib.import_module('windows.install_windows')
+        windows_installer.install_win(args.args, manager.certs_found)
     elif os.find('darwin') > -1:
-        install_mac()
+        mac_installer = importlib.import_module('macos.install_macos')
+        mac_installer.install_mac()
     else:
         print("Error: Unsupported OS: " + os)
 
