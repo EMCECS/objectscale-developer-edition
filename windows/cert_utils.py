@@ -36,7 +36,6 @@ class cert_utility:
 
     def pull_certs(self, force):
         # Get all certificates installed on the PC and split them by entry.
-        print(self.powershell + ' Get-ChildItem Cert:\\ -Recurse')
         result = subprocess.check_output(self.powershell + ' Get-ChildItem Cert:\\ -Recurse', shell=True)
         result = result.decode(encoding='ascii')
         split = result.split("\r\n\r\n")
