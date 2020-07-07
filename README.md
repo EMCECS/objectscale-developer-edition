@@ -39,13 +39,13 @@ If you would like to keep previous configurations for Minikube and Helm:
 Regex is a powerful tool that can be used generally to select text, and in this context, is used to select which certificates are pulled from the store. One can find a quick-guide on how to use regex [here](https://cheatography.com/davechild/cheat-sheets/regular-expressions/pdf/).
 The following is an entry which can be used as an example to test regexes on:
 
-``Subject      : CN=Dell Enterprise Root CA, O=Dell Inc.  
-Issuer       : CN=Dell Enterprise Root CA, O=Dell Inc.  
-Thumbprint   : 0D00D5DEFD97CE5CC879358A3164BBF3EE6B25B3  
-FriendlyName :   
-NotBefore    : 11/19/2004 5:17:46 PM  
-NotAfter     : 11/19/2028 5:17:46 PM  
-Extensions   : {System.Security.Cryptography.Oid, System.Security.Cryptography.Oid, System.Security.Cryptography.Oid,  
-               System.Security.Cryptography.Oid}``
+    Subject      : CN=Dell Enterprise Root CA, O=Dell Inc.   
+    Issuer       : CN=Dell Enterprise Root CA, O=Dell Inc.  
+    Thumbprint   : 0D00D5DEFD97CE5CC879358A3164BBF3EE6B25B3  
+    FriendlyName :   
+    NotBefore    : 11/19/2004 5:17:46 PM  
+    NotAfter     : 11/19/2028 5:17:46 PM  
+    Extensions   : {System.Security.Cryptography.Oid, System.Security.Cryptography.Oid, System.Security.Cryptography.Oid,  
+               System.Security.Cryptography.Oid}
 
 A regex can match any part of these entries in order to be pulled into a file. In the case of the default regex 'Subject.\*CN=.\*(emc|EMC)' searches for 'Subject' followed by 'CN=' followed by either 'emc' or 'EMC'. Regexes are case sensitive, and while 'Subject.\*CN=.\*(emc|EMC)' may match some certificates, 'subject.\*CN=.\*(emc|EMC)' will not match any certificates.
