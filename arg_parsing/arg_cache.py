@@ -75,6 +75,12 @@ class parse_cache:
                                  dest='pull_certs_no_convert',
                                  help='(Windows only) do not convert certificates from CER to PEM. This will prevent them from being copied to Minikube.')
 
+        self.parser.add_argument('-pcr', '--certificate-regex',
+                                 type=str,
+                                 dest='cert_regex',
+                                 default='Subject.*CN=.*(emc|EMC)',
+                                 help='(Windows only) do not convert certificates from CER to PEM. This will prevent them from being copied to Minikube.')
+
         self.args = self.parser.parse_args()
 
     @staticmethod

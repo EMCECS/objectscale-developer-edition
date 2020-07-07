@@ -14,8 +14,9 @@ class cert_utility:
     cert_query_regex = 'Subject.*CN=.*(emc|EMC)'
     thumbprint_query_regex = 'Thumbprint.*: [\d|A-F|a-f]{40}'
 
-    def __init__(self):
+    def __init__(self, regex):
         self.certs_folder = self.working_folder + '\\certs'
+        self.cert_query_regex = regex
         return
 
     def make_certs_folder(self):
@@ -35,6 +36,7 @@ class cert_utility:
 
     def pull_certs(self, force):
         # Get all certificates installed on the PC and split them by entry.
+        print(self.powershell + ' Get-ChildItem Cert:\\ -Recurse')
         result = subprocess.check_output(self.powershell + ' Get-ChildItem Cert:\\ -Recurse', shell=True)
         result = result.decode(encoding='ascii')
         split = result.split("\r\n\r\n")

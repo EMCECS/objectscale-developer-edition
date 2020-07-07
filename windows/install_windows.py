@@ -122,7 +122,7 @@ def install_minikube(args: argparse.ArgumentParser):
 
 
 def install_certs(args: argparse.ArgumentParser):
-    cert_manager = windows.cert_utils.cert_utility()
+    cert_manager = windows.cert_utils.cert_utility(args.cert_regex)
     print(colors.fg.yellow + "-----Certificates (Windows)-----")
     cert_manager.make_certs_folder()
     pem_certs_found, cer_certs_found = cert_manager.count_certs()
