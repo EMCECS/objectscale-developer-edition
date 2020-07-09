@@ -48,4 +48,4 @@ The following is an entry which can be used as an example to test regexes on:
     Extensions   : {System.Security.Cryptography.Oid, System.Security.Cryptography.Oid, System.Security.Cryptography.Oid,  
                System.Security.Cryptography.Oid}
 
-A regex can match any part of these entries in order to be pulled into a file. In the case of the default regex 'Subject.\*CN=.\*(emc|EMC)' searches for 'Subject' followed by 'CN=' followed by either 'emc' or 'EMC'. Regexes are case sensitive, and while 'Subject.\*CN=.\*(emc|EMC)' may match some certificates, 'subject.\*CN=.\*(emc|EMC)' will not match any certificates.
+A regex can match any part of these entries in order to be pulled into a file. In the case of the default regex 'Subject.\*CN=.\*(emc|EMC)' searches for 'Subject' followed by 'CN=' followed by either 'emc' or 'EMC'. Regexes are case sensitive, and while 'Subject.\*CN=.\*(emc|EMC)' may match some certificates, 'subject.\*CN=.\*(emc|EMC)' will not match any certificates. While any part of the regex can match to give a certificates, all certificates are named according to their common name.

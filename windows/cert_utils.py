@@ -5,18 +5,27 @@ import re
 import importlib
 import shutil
 
-
+# Everything that has to do with querying, pulling,
+# converting and moving certificates in the windows version
+# of Objectscale developer edition.
 class cert_utility:
     certs_expected = 4
+    # Path to powershell
+    # TODO: find powershell in PATH? perhaps change to simply 'powershell.exe'
     powershell = 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe'
+    # Folder relative to install.py
     certs_folder = '\\certs'
     working_folder = os.path.dirname(os.path.realpath(__file__))[:-8]
     cert_query_regex = 'Subject.*CN=.*(emc|EMC)'
     thumbprint_query_regex = 'Thumbprint.*: [\d|A-F|a-f]{40}'
 
-    def __init__(self, regex):
+    def __init__(self, regex=None):
         self.certs_folder = self.working_folder + '\\certs'
-        self.cert_query_regex = regex
+        if regex is not None:
+            self.cert_query_regex = regex
+        else:
+            self.cert_query_regex = 'Subject.*CN=.*(emc|EMC)'
+
         return
 
     def make_certs_folder(self):
@@ -24,6 +33,7 @@ class cert_utility:
             print('No folder named "certs" found, creating...')
             os.mkdir(self.certs_folder)
 
+    # Lists certificates in the project certs folder.
     def count_certs(self) -> [int, int]:
         cer_count = 0
         pem_count = 0
@@ -34,7 +44,11 @@ class cert_utility:
                 cer_count += 1
         return pem_count, cer_count
 
+    # Certificate pull function
+    # Takes in the option on whether or not to force overwrite the current certificate files
+    # Uses powershell features to list, query, and export the certificates as CER files
     def pull_certs(self, force):
+
         # Get all certificates installed on the PC and split them by entry.
         result = subprocess.check_output(self.powershell + ' Get-ChildItem Cert:\\ -Recurse', shell=True)
         result = result.decode(encoding='ascii')
@@ -44,12 +58,15 @@ class cert_utility:
         # Start a dictionary of the certificates that we want and count them.
         i = 0
         cert_dict = {}
+        # Iterate over the items
         for item in split:
             i += 1
+            # If the regex is found anywhere in the entry
             if not re.search(self.cert_query_regex, item, re.IGNORECASE) is None:
                 lines = item.split("\r\n")
                 name = ''
                 fingerprint = ''
+                # Go line by line and grab the CN and the Fingerprint, and add it to the dictionary
                 for line in lines:
                     if not re.search(self.thumbprint_query_regex, line, re.IGNORECASE) is None:
                         fingerprint = line[-40:]
@@ -59,6 +76,7 @@ class cert_utility:
                         name = line[start:end]
                 cert_dict[name] = fingerprint
 
+        # This will print out if no certificates are found.
         if len(cert_dict.keys()) < 1:
             print(
                 'No certificates found during automatic pull, you must get the following certificates, and place them in the certs folder.')
@@ -102,6 +120,9 @@ class cert_utility:
             elif not force:
                 print(key.replace(' ', '_') + '.cer already exists, skipping.')
 
+    # Certificate conversion function
+    # Uses OpenSSL to convert all .cer files to .pem
+    # This function will convert all files, even if they weren't nececairily pulled from the registry.
     def convert_certs(self):
         openSSL = importlib.import_module('OpenSSL')
 
@@ -119,9 +140,11 @@ class cert_utility:
             pem_file = open(self.certs_folder + '\\' + pemfile, 'wt')
             pem_file.write(openSSL.crypto.dump_certificate(file_type_out, cer).decode('utf-8'))
 
-        print('Successfully converted '+str(len(cerfiles))+' certificates to PEM format.')
+        print('Successfully converted ' + str(len(cerfiles)) + ' certificates to PEM format.')
 
+    # Moves PEM files to minikube folder. This is usually located in %HOMEPATH%/.minikube
     def move_certs_to_minikube(self):
+        # TODO: grab folder from minikube config
         minikube_cert_path = path.join(os.getenv('HOMEPATH'), '.minikube', 'files', 'etc', 'ssl', 'certs')
         # Creates the certs folder if it does not exist.
         if not path.exists(minikube_cert_path):
@@ -133,8 +156,9 @@ class cert_utility:
         for file in files:
             if file.find('.pem') > -1:
                 pemfiles.append(file)
+
+        # For every file we found, copy binarily to the minikube folder.
         for pemfile in pemfiles:
             shutil.copy2(path.join(self.certs_folder, pemfile), path.join(minikube_cert_path, pemfile))
 
-        print('Copied '+str(len(pemfiles))+' cert files to minikube config folder.')
-
+        print('Copied ' + str(len(pemfiles)) + ' cert files to minikube config folder.')

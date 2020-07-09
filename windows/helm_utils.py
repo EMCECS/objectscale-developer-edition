@@ -5,9 +5,16 @@ import zipfile
 import sys
 import urllib.request
 
+#Everything to do with handling helm in the windows install script.
 class helm_utility:
+    # This is the URL to pull HELM from if it is not currently installed
+    # TODO: dynamically get the most recent helm version
+    # TODO: allow the users to specify a certain helm version
+    # TODO: implement capability to list available versions to use
+    # TODO: implement capability to get current helm version
+    # TODO: Helm version management???
     helm_url = "https://get.helm.sh/helm-v3.2.4-windows-amd64.zip"
-    #TODO: Replace the string below with the proper installation location.
+    #TODO: Replace the string below with a proper installation location.
     helm_install_path = 'C:\\WINDOWS\\system32'
     is_valid_install: bool
     helm_path: str
@@ -23,6 +30,11 @@ class helm_utility:
 
         return self.is_valid_install, self.helm_path
 
+    # This function currently is used  to try to find Helm in the
+    # Windows PATH variable. If Helm is not found in the current PATH
+    # Helm is considered to be uninstalled.
+    # TODO: also check if tiller is installed.
+    # TODO: also check common alternative locations for Helm.
     def find_helm_in_PATH(self, PATH=os.getenv('PATH')) -> bool:
 
         # Split into paths to search for helm
@@ -42,9 +54,11 @@ class helm_utility:
 
         return self.is_valid_install
 
+
     def get_helm_version(self):
         os.system('Helm version')
         return
+
 
     def clean_helm(self):
         # Let helm remove itself.
@@ -61,9 +75,8 @@ class helm_utility:
             print('Helm not found in PATH, skipping removal...')
         return
 
+    # Installs helm on the system. If the helm ececutable is already in the self.helm_install_path, do nothing.
     def install_helm(self, PATH=os.getenv('PATH')):
-        #Installs helm on the system. If the helm ececutable is already in the self.helm_install_path, do nothing.
-
         # Change to user downloads folder
         current_path = os.getcwd()
         os.chdir(os.getenv('HOMEPATH') + '\\Downloads')

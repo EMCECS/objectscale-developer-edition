@@ -7,6 +7,7 @@ import shutil
 import arg_parsing.arg_cache
 import importlib
 
+# TODO: These requirements should be verified.
 requirement_cpu_count = 4
 requirement_ram_mb = 16384
 requirement_ram_mb_free = 10000
@@ -52,7 +53,10 @@ class colorText:
         cyan = '\033[46m'
         lightgrey = '\033[47m'
 
-
+# A function designed to check the requirements of the host system.
+# This function is agnostic to all OSes and needs to be able to run
+# on all supported OSes.
+# All of these should be warning messages, except checking disk space.
 def check_system_requirements(psutil):
     cpu_count = os.cpu_count()
     ram_mb = psutil.virtual_memory().total / 1000000
@@ -64,34 +68,38 @@ def check_system_requirements(psutil):
             colorText.bold + 'WARNING: Found ' +
             str(cpu_count) + ' logical CPU cores, we recommend at least ' +
             str(requirement_cpu_count) + ' cores.\n'
-            'Objectscale performance may suffer.' + colorText.reset)
+                                         'Objectscale performance may suffer.' + colorText.reset)
     if ram_mb < requirement_ram_mb:
         print(
             colorText.bold + 'WARNING: Found ' +
             str(ram_mb) + 'MB of RAM, we recommend at least ' +
             str(requirement_ram_mb) + 'MB of RAM.\n'
-            'Objectscale performance will suffer.' + colorText.reset)
+                                      'Objectscale performance will suffer.' + colorText.reset)
     if ram_mb_free < requirement_ram_mb_free:
         print(
             colorText.bold + 'WARNING: Found ' +
             str(ram_mb_free) + 'MB of free RAM, we recommend at least ' +
             str(requirement_ram_mb_free) + 'MB of free RAM.\n'
-            'Objectscale performance may suffer.' + colorText.reset)
+                                           'Objectscale performance may suffer.' + colorText.reset)
     if disk_free_space_mb < requirement_disk_space_mb:
         print(
             colorText.bold + 'WARNING: Found ' +
             str(disk_free_space_mb) + 'MB of free Disk Space, we recommend at least ' +
             str(requirement_disk_space_mb) + 'MB of free space.\n'
-            'Objectscale performance may suffer.' + colorText.reset)
+                                             'Objectscale performance may suffer.' + colorText.reset)
     if disk_free_space_mb * 2 < requirement_disk_space_mb:
         print(
             colorText.bold + 'Error: Disk space much too low to support a development environment. Please allocate '
-                             'more free space on your disk (>'+requirement_disk_space_mb/2+' total), and then run again.' + colorText.reset)
+                             'more free space on your disk (>' + requirement_disk_space_mb / 2 + ' total), and then run again.' + colorText.reset)
         exit(112)
 
 
 def main():
+    print(colorText.reset)
     print('Hello, Developer.')
+
+    # This section of code is used to fetch and check all prerequisites for this installation process
+    # With the exception of Minikube, Docker, Helm, and of course, Objectscale.
     print('-----Libraries & Prerequisites-----')
     args = arg_parsing.arg_cache.parse_cache()
     manager = libmgr.libmgr()
@@ -99,18 +107,26 @@ def main():
     psutil = importlib.import_module('psutil')
     check_system_requirements(psutil)
     print('----- END Libraries & Prerequisites -----')
+
+    # Discern the current operating system and run the proper install script for it.
+    # The install scripts are imported on the fly to reduce software conflicts.
     os = platform.system().casefold()
-    if os.find('linux') > -1:
-        tux_installer = importlib.import_module('linux.install_linux')
-        tux_installer.install_tux(args.args)
-    elif os.find('windows') > -1:
-        windows_installer = importlib.import_module('windows.install_windows')
-        windows_installer.install_win(args.args, manager.certs_found)
-    elif os.find('darwin') > -1:
-        mac_installer = importlib.import_module('macos.install_macos')
-        mac_installer.install_mac()
-    else:
-        print("Error: Unsupported OS: " + os)
+    try:
+        if os.find('linux') > -1:
+            tux_installer = importlib.import_module('linux.install_linux')
+            tux_installer.install_tux(args.args)
+        elif os.find('windows') > -1:
+            windows_installer = importlib.import_module('windows.install_windows')
+            windows_installer.install_win(args.args, manager.certs_found)
+        elif os.find('darwin') > -1:
+            mac_installer = importlib.import_module('macos.install_macos')
+            mac_installer.install_mac()
+        else:
+            print("Error: Unsupported OS: " + os)
+    except:
+        # If for whatever reason we get an exception,
+        # Make sure that the color is reset.
+        print(colorText.reset)
 
 
 if __name__ == "__main__":
