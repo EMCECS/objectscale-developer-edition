@@ -17,7 +17,9 @@ class minikube_utility:
 			subprocess.run(['sudo', '-i', 'chmod', '+x', 'minikube'])
 			subprocess.run(['sudo', '-i', 'cp', 'minikube', "/usr/local/bin"])
 			subprocess.run(['sudo', '-i', 'rm', 'minikube'])
-			
+
+			subprocess.run(['sudo', 'apt', 'install', 'conntrack'])
+
 			print ("Minikube installation complete.")
 			return
 	
