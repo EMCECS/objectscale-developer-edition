@@ -34,7 +34,7 @@ class kubectl_utility:
 			# this only works on linux distributions that support snap
 			subprocess.run(['sudo', 'apt', 'update'])
 			subprocess.run(['sudo', 'apt', 'install', 'snapd'])
-			subprocess.run(['sudo', 'install', 'kubectl', '--classic'])
+			subprocess.run(['sudo', 'snap', 'install', 'kubectl', '--classic'])
 			print("Kubectl installation complete.")
 
 	def clean_kubectl(self):

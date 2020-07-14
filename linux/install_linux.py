@@ -1,8 +1,9 @@
 import argparse
-import docker_utils
-import helm_utils
-import kubectl_utils
-import minikube_utils
+import linux.docker_utils
+import linux.helm_utils
+import linux.kubectl_utils
+import linux.minikube_utils
+import linux.misc_utils
 import subprocess
 import time
 
@@ -21,7 +22,7 @@ def install_tux(args: argparse.ArgumentParser):
     execute_objectscale(args)
 
 def execute_docker(args: argparse.ArgumentParser):
-    docker_util = docker_utils.docker_utility()
+    docker_util = linux.docker_utils.docker_utility()
 
     # TO DO, probably through just folder removal
     # if args.clean:
@@ -31,7 +32,7 @@ def execute_docker(args: argparse.ArgumentParser):
     docker_util.install_docker()
 
 def execute_helm(args: argparse.ArgumentParser):
-    helm_util = helm_utils.helm_utility()
+    helm_util = linux.helm_utils.helm_utility()
 
     if args.clean or args.helm_clean:
         helm_util.clean_helm()
@@ -40,7 +41,7 @@ def execute_helm(args: argparse.ArgumentParser):
     helm_util.install_helm()
 
 def execute_kubectl(args: argparse.ArgumentParser):
-    kubectl_util = kubectl_utils.kubectl_utility()
+    kubectl_util = linux.kubectl_utils.kubectl_utility()
 
     if args.clean:
         kubectl_util.clean_kubectl()
@@ -49,13 +50,19 @@ def execute_kubectl(args: argparse.ArgumentParser):
     kubectl_util.install_kubectl()
 
 def execute_minikube(args: argparse.ArgumentParser):
-    minikube_util = minikube_utils.minikube_utility()
+    minikube_util = linux.minikube_utils.minikube_utility()
 
-    if args.clean or args.minikube_clean:
-        minikube_util.clean_minikube()
+    #if args.clean or args.minikube_clean:
+        #minikube_util.clean_minikube()
 
     # Start install
     minikube_util.install_minikube()
+
+def execute_misc(args: argparse.ArgumentParser):
+    misc_util = linux.misc_utils.misc_utility()
+
+    # Start install
+    misckube_util.install_misc()
 
 def execute_objectscale(args: argparse.ArgumentParser):
     print('-----Objectscale-----')
@@ -65,7 +72,7 @@ def execute_objectscale(args: argparse.ArgumentParser):
             'No Github token provided. Objectscale needs a token to install properly. Use the -t [Github token] flag to provide a token. See readme.md for more info.')
         print('----- END Objectscale -----\n')
         return
-    objs_util = objectscale_utils.objectscale_utility()
+    objs_util = linux.objectscale_utils.objectscale_utility()
     if args.ECS_clean or args.clean:
         objs_util.clean_objectscale()
         objs_util.uninstall_objectscale()
@@ -81,3 +88,7 @@ def verify_installation():
 
     return isValidInstall
 
+def testargs(args: argparse.ArgumentParser):
+    if args.clean or args.minikube_clean:
+        print('Removing local data')
+    print("testing")
