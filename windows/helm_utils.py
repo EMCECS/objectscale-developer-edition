@@ -33,7 +33,6 @@ class helm_utility:
     # This function currently is used  to try to find Helm in the
     # Windows PATH variable. If Helm is not found in the current PATH
     # Helm is considered to be uninstalled.
-    # TODO: also check if tiller is installed.
     # TODO: also check common alternative locations for Helm.
     def find_helm_in_PATH(self, PATH=os.getenv('PATH')) -> bool:
 

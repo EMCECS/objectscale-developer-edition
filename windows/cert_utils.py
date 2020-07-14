@@ -50,7 +50,11 @@ class cert_utility:
     def pull_certs(self, force):
 
         # Get all certificates installed on the PC and split them by entry.
-        result = subprocess.check_output(self.powershell + ' Get-ChildItem Cert:\\ -Recurse', shell=True)
+        try:
+            result = subprocess.check_output(self.powershell + ' Get-ChildItem Cert:\\ -Recurse', shell=True, stderr=subprocess.STDOUT)
+        except subprocess.CalledProcessError as e:
+            result = e.output
+
         result = result.decode(encoding='ascii')
         split = result.split("\r\n\r\n")
 
@@ -106,6 +110,8 @@ class cert_utility:
                                'Get-ChildItem',
                                '-Path',
                                'cert:\\CurrentUser\\*\\' + cert_dict[key],
+                               '-ErrorAction',
+                               'Continue'
                                ';',
                                'Export-Certificate',
                                '-Cert',
@@ -114,7 +120,13 @@ class cert_utility:
                                '\"' + self.certs_folder + '\\' + key.replace(' ', '_') + '.cer\"',
                                '-Type',
                                'cer']
-                    result = subprocess.check_output(command, shell=True)
+                    try:
+                        result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+                    except subprocess.CalledProcessError as e:
+                        result = e.output
+                        print(result.decode(encoding='ascii'))
+                        print(' '.join(command))
+
                 except:
                     continue
             elif not force:
