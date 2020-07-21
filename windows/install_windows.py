@@ -70,7 +70,7 @@ def install_objectscale(args: argparse.ArgumentParser):
 
 def install_docker(args: argparse.ArgumentParser):
     print(colors.fg.blue + '-----Docker-----')
-    # TODO: Verify docker installation
+    print('Windows installation, Docker not required.')
     print('----- END Docker -----\n' + colors.reset)
 
 

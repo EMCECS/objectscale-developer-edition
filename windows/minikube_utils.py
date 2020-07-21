@@ -34,7 +34,7 @@ class minikube_utility:
         os.system('minikube config set memory 16384')
         os.system('minikube config set cpus 4')
         os.system('minikube config set vm-driver hyperv')
-        os.system('minikube config set disk-size 100G')
+        os.system('minikube config set disk-size 200G')
         if not path.exists(os.getenv('HOMEPATH')+'\\.minikube'):
             os.mkdir(os.getenv('HOMEPATH')+'\\.minikube')
         if not path.exists(os.getenv('HOMEPATH')+'\\.minikube\\files'):
