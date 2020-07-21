@@ -28,4 +28,6 @@ class helm_utility:
 		print("Removing Helm.")
 		subprocess.run(['sudo', 'snap', 'remove', 'helm'])
 		subprocess.run(['sudo', 'rm', '-rf', '/usr/local/bin/helm'])
+
 		print("Helm removal complete.")
+
