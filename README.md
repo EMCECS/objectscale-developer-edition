@@ -20,7 +20,45 @@ If you would like to keep previous configurations for Minikube and Helm:
 
   ```python install.py -t [Github access token]```
 
-### Command Line Syntax:
+### Quick Command Line Guide
+#### Formatting   
+Flags are formatted in a subject-verb way, where the first part of a flag represents a subject, and the second part represents an action that can be performed on the subject. If a subject is not provided, the program attempts to execute the verb on all possible subjects.  
+
+#### Special Flags   
+There are some flags which don't follow subject-verb grammar, those flags are listed here.   
+ * Ram allocation            : --RAM
+ * CPU core count allocation : --CPU
+ * Storage allocation        : --DISK
+
+#### Subjects  
+The following are *Component* subjects, and are valid with component verbs:
+ * Minikube      : denoted by 'm'
+ * Helm          : denoted by 'h'
+ * Objectscale   : denoted by 'o'
+ * Docker(Linux) : denoted by 'd'
+The following are *Output* subjects, and are valid with output verbs:
+ * Certificates (Windows) : denoted by 'pc'
+ * Endpoint Credentials   : denoted by 'ec'
+The following are *Certificate* subjects, and are valid with the certificate verbs:
+ * Certificates (Windows) : denoted by 'pc'  
+ * Minikube               : denoted by 'm'  
+
+#### Verbs
+Component verbs:
+ * Clean          : denoted by 'c'  : Clears all active configuration of the current component. This is a destructive process, so use with caution.
+ * Install        : denoted by 'i'  : Uninstalls and reinstalls the specified component. Attempts to keep all active configurations.
+Certificate verbs:
+ * No Convert     : denoted by 'nc' : Pulled certificates are not to be converted. 
+ * Force          : denoted by 'f'  : The certificate operations are to be forced if unsucessful
+ * Regex          : denoted by 'r'  : Only certificates which match a certain regex should be pulled
+Output verbs: 
+ * Output enabled : denoted by 'o'  : Enables the output of the selected subject
+ * Output to file : denoted by 'f'  : Outputs to a file, as opposed to default command line
+ * Output only    : denoted by 'oo' : Disables all installation features, and only produces the selected output(s). This will cause all other non-output flags to be ignored.
+
+
+
+### Complete Command Line Syntax:
 
  * ```-t```, ```--token```: Your github access token. To create a new token, go to Settings -> Developer settings -> Personal access tokens -> Generate new token. Access at minimum needs 'repo' and 'read:packages' permissions.
  * ```-c```, ```--clean```: Perform a clean installation wherein all dependancies are cleaned, uninstalled, and re-installed. Using this flag with other cleaning and installation flags is redundant.

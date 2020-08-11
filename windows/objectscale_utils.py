@@ -4,7 +4,7 @@ import subprocess
 
 class objectscale_utility:
     # TODO: find correct URL, if applicable.
-    helm_chart_url = "https://^@raw.githubusercontent.com/emcecs/charts/master/docs"
+    helm_chart_url = "https://^@raw.githubusercontent.com/emcecs/charts/v0.33.0/docs"
     # TODO: find correct installlation path
     objectscale_install_path = ''
     objectscale_path: str

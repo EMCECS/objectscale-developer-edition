@@ -53,6 +53,7 @@ class colorText:
         cyan = '\033[46m'
         lightgrey = '\033[47m'
 
+
 # A function designed to check the requirements of the host system.
 # This function is agnostic to all OSes and needs to be able to run
 # on all supported OSes.
@@ -90,7 +91,7 @@ def check_system_requirements(psutil):
     if disk_free_space_mb * 2 < requirement_disk_space_mb:
         print(
             colorText.bold + 'Error: Disk space much too low to support a development environment. Please allocate '
-                             'more free space on your disk (>' + requirement_disk_space_mb / 2 + ' total), and then run again.' + colorText.reset)
+                             'more free space on your disk (>' + str(requirement_disk_space_mb / 2) + ' total), and then run again.' + colorText.reset)
         exit(112)
 
 
@@ -110,19 +111,19 @@ def main():
 
     # Discern the current operating system and run the proper install script for it.
     # The install scripts are imported on the fly to reduce software conflicts.
-    os = platform.system().casefold()
+    os_var = platform.system().casefold()
     try:
-        if os.find('linux') > -1:
+        if os_var.find('linux') > -1:
             tux_installer = importlib.import_module('linux.install_linux')
             tux_installer.install_tux(args.args)
-        elif os.find('windows') > -1:
+        elif os_var.find('windows') > -1:
             windows_installer = importlib.import_module('windows.install_windows')
             windows_installer.install_win(args.args, manager.certs_found)
-        elif os.find('darwin') > -1:
+        elif os_var.find('darwin') > -1:
             mac_installer = importlib.import_module('macos.install_macos')
             mac_installer.install_mac()
         else:
-            print("Error: Unsupported OS: " + os)
+            print("Error: Unsupported OS: " + os_var)
     except:
         # If for whatever reason we get an exception,
         # Make sure that the color is reset.
