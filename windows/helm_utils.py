@@ -15,7 +15,7 @@ class helm_utility:
     # TODO: Helm version management???
     helm_url = "https://get.helm.sh/helm-v3.2.4-windows-amd64.zip"
     #TODO: Replace the string below with a proper installation location.
-    helm_install_path = 'C:\\WINDOWS\\system32'
+    helm_install_path = 'C:\\WINDOWS'
     is_valid_install: bool
     helm_path: str
 
@@ -89,7 +89,7 @@ class helm_utility:
         try:
             zip = zipfile.ZipFile(os.getenv('HOMEPATH') + '\\Downloads\\helm-v2.16.9-windows-amd64.zip')
             zip.extractall(os.getenv('HOMEPATH') + '\\Downloads\\helm-v2.16.9-windows-amd64')
-            os.system('ROBOCOPY \"' + os.getenv('HOMEPATH') + '\\Downloads\\helm-v2.16.9-windows-amd64\\windows-amd64\" C:\\Windows\\System32 /NDL /NFL')
+            os.system('ROBOCOPY \"' + os.getenv('HOMEPATH') + '\\Downloads\\helm-v2.16.9-windows-amd64\\windows-amd64\" '+self.helm_install_path+' /NDL /NFL')
         except:
             print('Problem unzipping helm.')
 

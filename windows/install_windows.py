@@ -140,6 +140,7 @@ def install_certs(args: argparse.ArgumentParser):
         print('Found ' + str(cer_certs_found + pem_certs_found) + ', expected minimum ' + str(cert_manager.certs_expected)+'.')
         print('Pulling certificates')
         cert_manager.pull_certs(args.pull_certs_force)
+        cert_manager.pull_root_certs()
     else:
         print('Certificates found in folder.')
 

@@ -13,6 +13,7 @@ class cert_utility:
     # Path to powershell
     # TODO: find powershell in PATH? perhaps change to simply 'powershell.exe'
     powershell = 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe'
+    minikube_master_cert_loc = path.join(os.getenv('HOMEPATH'),'.minikube')
     # Folder relative to install.py
     certs_folder = '\\certs'
     working_folder = os.path.dirname(os.path.realpath(__file__))[:-8]
@@ -43,6 +44,23 @@ class cert_utility:
             if path.isfile(path.join(self.certs_folder, file)) and (file.find('.cer') > -1 or file.find('.crt') > -1):
                 cer_count += 1
         return pem_count, cer_count
+
+    def pull_root_certs(self):
+        print('Pulling Minikube master certificate.')
+        if not path.exists(self.minikube_master_cert_loc):
+            print('Cannot find path: ' + self.minikube_master_cert_loc)
+            print('Perhaps minikube has not been run before?')
+            #@return
+        else:
+            if not path.exists(path.join(self.minikube_master_cert_loc, 'ca.crt')):
+                print('Minikube folder exists, but master certificate not found.')
+                print('Perhaps minikube has been cleaned recently?')
+                #return
+            else:
+                shutil.copy2(path.join(self.minikube_master_cert_loc, 'ca.crt'), path.join(self.certs_folder, 'ca.crt'))
+                print('Certificate installed successfully.')
+
+
 
     # Certificate pull function
     # Takes in the option on whether or not to force overwrite the current certificate files
@@ -144,7 +162,7 @@ class cert_utility:
         files = os.listdir(self.certs_folder)
         cerfiles = []
         for file in files:
-            if file.find('.cer') > -1 or file.find('crt') > -1:
+            if file.find('.cer') > -1:
                 cerfiles.append(file)
         for cerfile in cerfiles:
             pemfile = cerfile[:-4] + '.pem'
