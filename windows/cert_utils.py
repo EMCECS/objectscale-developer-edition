@@ -150,10 +150,43 @@ class cert_utility:
             elif not force:
                 print(key.replace(' ', '_') + '.cer already exists, skipping.')
 
+    def output_certs_stdout(self):
+        print('Certificate Information:')
+        openSSL = importlib.import_module('OpenSSL')
+
+        file_type_in = openSSL.crypto.FILETYPE_ASN1
+        files = os.listdir(self.certs_folder)
+        cerfiles = []
+        for file in files:
+            if file.find('.cer') > -1:
+                cerfiles.append(file)
+        for cerfile in cerfiles:
+            cer = openSSL.crypto.load_certificate(file_type_in, open(self.certs_folder + '\\' + cerfile, 'rb').read())
+            name = cer.get_subject()
+            name_common = name.CN
+            issuer = cer.get_issuer()
+            name_issuer = issuer.organizationName
+            expiry = cer.get_notAfter()
+            start = cer.get_notBefore()
+            print('-----------')
+            print('CN: ' + name_common)
+            print('IS: ' + name_issuer)
+            print('ST: ', end='')
+            print(start)
+            print('EX: ', end='')
+            print(expiry)
+
+        print('----------')
+
+
+
     # Certificate conversion function
     # Uses OpenSSL to convert all .cer files to .pem
     # This function will convert all files, even if they weren't nececairily pulled from the registry.
     def convert_certs(self):
+
+        self.output_certs_stdout()
+
         openSSL = importlib.import_module('OpenSSL')
 
         file_type_in = openSSL.crypto.FILETYPE_ASN1
