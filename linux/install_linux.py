@@ -78,7 +78,7 @@ def execute_objectscale(args: argparse.ArgumentParser):
         objs_util.clean_objectscale()
         objs_util.uninstall_objectscale()
 
-    objs_util.install_objectscale(args.token)
+    objs_util.install_objectscale(args.token, args.version)
     print('----- END Objectscale -----\n')
 
 def verify_installation():

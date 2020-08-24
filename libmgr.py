@@ -65,6 +65,7 @@ class libmgr():
         self.get_pip()
         self.get_psutil()
         self.get_openssl()
+        self.get_pyGithub()
 
 
     def get_pip(self):
@@ -133,3 +134,15 @@ class libmgr():
         except:
             print('OpenSSL not found, installing...')
             os.system('pip3 install pyOpenSSL')
+
+    def get_pyGithub(self):
+        print('Checking for pyGithub.')
+        # noinspection PyBroadException
+        try:
+            subprocess.check_output(['pip3', 'show', 'pyGithub'], stderr=subprocess.DEVNULL,
+                                    shell=True)
+            print('pyGithub installed.')
+        except:
+            print('pyGithub not found, installing...')
+            os.system('pip3 install pyGithub')
+

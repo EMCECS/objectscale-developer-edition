@@ -59,12 +59,12 @@ def install_objectscale(args: argparse.ArgumentParser):
     if args.ECS_clean or args.clean:
         objs_util.clean_objectscale()
         objs_util.uninstall_objectscale()
-        objs_util.install_objectscale(args.token)
+        objs_util.install_objectscale(args.token, args.version)
     elif args.ECS_install:
         objs_util.uninstall_objectscale()
-        objs_util.install_objectscale(args.token)
+        objs_util.install_objectscale(args.token, args.version)
     elif not objs_util.check_objectscale_installation():
-        objs_util.install_objectscale(args.token)
+        objs_util.install_objectscale(args.token, args.version)
     print('----- END Objectscale -----\n' + colors.reset)
 
 

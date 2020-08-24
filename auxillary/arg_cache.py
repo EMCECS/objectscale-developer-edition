@@ -81,7 +81,18 @@ class parse_cache:
                                  default='Subject.*CN=.*(emc|EMC)',
                                  help='(Windows only) do not convert certificates from CER to PEM. This will prevent them from being copied to Minikube.')
 
-        self.args = self.parser.parse_args()
+        self.parser.add_argument('--versions',
+                                 action='store_true',
+                                 default=False,
+                                 dest='versions_query',
+                                 help='Query the available versions of objectscale to install.')
+
+        self.parser.add_argument('-v', '--version',
+                                 type=str,
+                                 dest='version',
+                                 default=None,
+                                 help='The version of objectscale to be installed.')
+
 
     @staticmethod
     def getFolderDirectory() -> str:

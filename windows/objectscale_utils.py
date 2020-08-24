@@ -1,10 +1,11 @@
 import os
 import subprocess
-
+import importlib
 
 class objectscale_utility:
     # TODO: find correct URL, if applicable.
-    helm_chart_url = "https://^@raw.githubusercontent.com/emcecs/charts/v0.33.0/docs"
+    default_helm_chart_url = "https://^@raw.githubusercontent.com/emcecs/charts/$/docs"
+    default_git_url = 'EMCECS/charts'
     # TODO: find correct installlation path
     objectscale_install_path = ''
     objectscale_path: str
@@ -51,6 +52,7 @@ class objectscale_utility:
         self.objectscale_path = ''
         self.is_valid_install = False
 
+
     def check_objectscale_installation(self, PATH=os.getenv('PATH')) -> bool:
         print('Verifying Objectscale Installation.')
         self.start_minikube_if_stoppped()
@@ -88,12 +90,12 @@ class objectscale_utility:
                 os.system('helm uninstall ' + s[0:8])
         print('Objectscale Uninstalled.')
 
-    def install_objectscale(self, token: str, PATH=os.getenv('PATH')):
+    def install_objectscale(self, token: str, version: str):
         print('Installing Objectscale.')
         self.start_minikube_if_stoppped()
         result = self.run_command_get_all_output('Helm repo list', shell=True)
         print('Installing ecs repo')
-        os.system('helm repo add ecs ' + self.helm_chart_url.replace('^', token))
+        os.system('helm repo add ecs ' + self.default_helm_chart_url.replace('^', token).replace('$',version))
         os.system(self.helm_repo_update_command)
         if result.find('objectscale-helm') == -1:
             print('Installing Objectscale helm dev repo')

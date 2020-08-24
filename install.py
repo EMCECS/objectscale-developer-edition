@@ -4,7 +4,7 @@ import platform
 import libmgr
 import os
 import shutil
-import arg_parsing.arg_cache
+import auxillary.arg_cache
 import importlib
 
 # TODO: These requirements should be verified.
@@ -96,13 +96,23 @@ def check_system_requirements(psutil):
 
 
 def main():
+    #Preamble. Things that have nothing to do with installation.
     print(colorText.reset)
     print('Hello, Developer.')
+    args = auxillary.arg_cache.parse_cache()
+    args = args.parser.parse_args()
+    version_query = importlib.import_module('auxillary.version_query')
+    query = version_query.version_manager(args.token)
+    query.fetch_versions()
+    if args.versions_query:
+        query.list_versions()
+        return
+    if args.version is not None:
+        query.select_version(args.version)
 
     # This section of code is used to fetch and check all prerequisites for this installation process
     # With the exception of Minikube, Docker, Helm, and of course, Objectscale.
     print('-----Libraries & Prerequisites-----')
-    args = arg_parsing.arg_cache.parse_cache()
     manager = libmgr.libmgr()
     manager.get_libs()
     psutil = importlib.import_module('psutil')
@@ -115,13 +125,14 @@ def main():
     try:
         if os_var.find('linux') > -1:
             tux_installer = importlib.import_module('linux.install_linux')
-            tux_installer.install_tux(args.args)
+            tux_installer.install_tux(args)
         elif os_var.find('windows') > -1:
             windows_installer = importlib.import_module('windows.install_windows')
-            windows_installer.install_win(args.args, manager.certs_found)
+            windows_installer.install_win(args, manager.certs_found)
         elif os_var.find('darwin') > -1:
-            mac_installer = importlib.import_module('macos.install_macos')
-            mac_installer.install_mac()
+            print('Installation on MacOS is currently unsupported.')
+            #mac_installer = importlib.import_module('macos.install_macos')
+            #mac_installer.install_mac()
         else:
             print("Error: Unsupported OS: " + os_var)
     except:

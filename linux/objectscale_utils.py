@@ -3,7 +3,7 @@ import subprocess
 
 class objectscale_utility:
     # TODO: find correct URL, if applicable.
-    helm_chart_url = "https://^@raw.githubusercontent.com/emcecs/charts/master/docs"
+    helm_chart_url = "https://^@raw.githubusercontent.com/emcecs/charts/$/docs"
     # TODO: find correct installlation path
     objectscale_install_path = ''
     objectscale_path: str
@@ -50,13 +50,13 @@ class objectscale_utility:
             if not s.find('objs-mgr') == -1:
                 os.system('helm uninstall '+s)
 
-    def install_objectscale(self, token: str, PATH=os.getenv('PATH')):
+    def install_objectscale(self, token: str, version: str, PATH=os.getenv('PATH')):
         print('Installing Objectscale.')
         self.start_minikube_if_stoppped()
         result = subprocess.check_output('Helm repo list', shell=True)
         result = result.decode(encoding='ascii').lower()
         print('Installing Deos repo')
-        subprocess.run(['helm', 'repo', 'add', 'ecs', self.helm_chart_url.replace('^',token)])
+        subprocess.run(['helm', 'repo', 'add', 'ecs', self.helm_chart_url.replace('^',token).replace('$',version)])
         subprocess.run(['helm', 'repo', 'update'])
         if result.find('objectscale-helm-dev') == -1:
             print('Installing Objectscale helm dev repo')

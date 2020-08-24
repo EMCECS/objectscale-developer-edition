@@ -185,8 +185,6 @@ class cert_utility:
     # This function will convert all files, even if they weren't nececairily pulled from the registry.
     def convert_certs(self):
 
-        self.output_certs_stdout()
-
         openSSL = importlib.import_module('OpenSSL')
 
         file_type_in = openSSL.crypto.FILETYPE_ASN1
