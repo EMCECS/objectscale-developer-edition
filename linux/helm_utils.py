@@ -7,6 +7,10 @@ class helm_utility:
 		self.is_valid_install = False
 
 	def install_helm(self):
+		exist = subprocess.call('command helm version', shell=True)
+		if exist == 0:
+			return
+
 		# Install Helm required packages
 		subprocess.run(['sudo', 'apt-get', 'clean'])
 		subprocess.run(['sudo', 'apt-get', 'update'])

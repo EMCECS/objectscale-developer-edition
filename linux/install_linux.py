@@ -23,6 +23,7 @@ def install_tux(args: argparse.ArgumentParser):
     execute_objectscale(args)
 
 def execute_docker(args: argparse.ArgumentParser):
+    print('-----Docker-----')
     docker_util = linux.docker_utils.docker_utility()
 
     # TO DO, probably through just folder removal
@@ -31,8 +32,11 @@ def execute_docker(args: argparse.ArgumentParser):
 
     # Start install
     docker_util.install_docker()
+    print('-----End Docker-----')
+
 
 def execute_helm(args: argparse.ArgumentParser):
+    print('-----Helm-----')
     helm_util = linux.helm_utils.helm_utility()
 
     if args.clean or args.helm_clean:
@@ -40,8 +44,10 @@ def execute_helm(args: argparse.ArgumentParser):
 
     # Start install
     helm_util.install_helm()
+    print('-----End Helm-----')
 
 def execute_kubectl(args: argparse.ArgumentParser):
+    print('-----Kubectl-----')
     kubectl_util = linux.kubectl_utils.kubectl_utility()
 
     if args.clean:
@@ -49,8 +55,10 @@ def execute_kubectl(args: argparse.ArgumentParser):
 
     # Start install
     kubectl_util.install_kubectl()
+    print('-----End Kubectl-----')
 
 def execute_minikube(args: argparse.ArgumentParser):
+    print('-----Minikube-----')
     minikube_util = linux.minikube_utils.minikube_utility()
 
     #if args.clean or args.minikube_clean:
@@ -58,6 +66,7 @@ def execute_minikube(args: argparse.ArgumentParser):
 
     # Start install
     minikube_util.install_minikube()
+    print('-----End Minikube-----')
 
 def execute_misc(args: argparse.ArgumentParser):
     misc_util = linux.misc_utils.misc_utility()

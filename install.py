@@ -101,14 +101,6 @@ def main():
     print('Hello, Developer.')
     args = auxillary.arg_cache.parse_cache()
     args = args.parser.parse_args()
-    version_query = importlib.import_module('auxillary.version_query')
-    query = version_query.version_manager(args.token)
-    query.fetch_versions()
-    if args.versions_query:
-        query.list_versions()
-        return
-    if args.version is not None:
-        query.select_version(args.version)
 
     # This section of code is used to fetch and check all prerequisites for this installation process
     # With the exception of Minikube, Docker, Helm, and of course, Objectscale.
@@ -118,6 +110,14 @@ def main():
     psutil = importlib.import_module('psutil')
     check_system_requirements(psutil)
     print('----- END Libraries & Prerequisites -----')
+    if args.versions_query:
+        query.list_versions()
+        return
+    version_query = importlib.import_module('auxillary.version_query')
+    query = version_query.version_manager(args.token)
+    query.fetch_versions()
+    if args.version is not None:
+        query.select_version(args.version)
 
     # Discern the current operating system and run the proper install script for it.
     # The install scripts are imported on the fly to reduce software conflicts.
