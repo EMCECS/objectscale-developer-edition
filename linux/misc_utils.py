@@ -7,6 +7,8 @@ class misc_utility:
 		self.is_valid_install = False
 
 	def install_misc(self):
+		print ("Starting Misc utilities installations")
+
 		subprocess.run(['sudo', 'apt', 'update'])
 		subprocess.run(['sudo', 'apt', 'install', 'conntrack'])
 		subprocess.run(['sudo', 'apt', 'install', 'ethtool'])

@@ -2,10 +2,7 @@ import os
 import subprocess
 
 class objectscale_utility:
-    # TODO: find correct URL, if applicable.
-    helm_chart_url = "https://^@raw.githubusercontent.com/emcecs/charts/$/docs"
-    # TODO: find correct installlation path
-    objectscale_install_path = ''
+    helm_chart_url = "https://^@raw.githubusercontent.com/emcecs/charts/master/docs"
     objectscale_path: str
     is_valid_install: bool
 
@@ -16,8 +13,8 @@ class objectscale_utility:
     def check_objectscale_installation(self, PATH=os.getenv('PATH')) -> bool:
         print('Verifying Objectscale Installation.')
         self.start_minikube_if_stoppped()
-        result = subprocess.check_output('Helm init', shell=True)
-        result = subprocess.check_output('Helm repo list', shell=True)
+        result = subprocess.check_output('helm init', shell=True)
+        result = subprocess.check_output('helm repo list', shell=True)
         result = result.decode(encoding='ascii').lower()
         if result.find('ecs-cluster') == -1:
             print('ECS-cluster not installed')
@@ -41,7 +38,7 @@ class objectscale_utility:
     def uninstall_objectscale(self):
         print('Uninstalling objectscale.')
         self.start_minikube_if_stoppped()
-        result = subprocess.check_output('Helm list | "%CD%/lib_distr/gawk/awk.exe" "{print $1}"', shell=True)
+        result = subprocess.check_output('helm list | "%CD%/lib_distr/gawk/awk.exe" "{print $1}"', shell=True)
         result = result.decode(encoding='ascii').lower()
         results = result.split('\n')
         for s in results:
@@ -50,18 +47,18 @@ class objectscale_utility:
             if not s.find('objs-mgr') == -1:
                 os.system('helm uninstall '+s)
 
-    def install_objectscale(self, token: str, version: str, PATH=os.getenv('PATH')):
+    def install_objectscale(self, token: str, PATH=os.getenv('PATH')):
         print('Installing Objectscale.')
         self.start_minikube_if_stoppped()
-        result = subprocess.check_output('Helm repo list', shell=True)
+        result = subprocess.check_output('helm repo list', shell=True)
         result = result.decode(encoding='ascii').lower()
         print('Installing Deos repo')
-        subprocess.run(['helm', 'repo', 'add', 'ecs', self.helm_chart_url.replace('^',token).replace('$',version)])
-        subprocess.run(['helm', 'repo', 'update'])
+        subprocess.run(['sudo', 'helm', 'repo', 'add', 'deos', self.helm_chart_url.replace('^',token)])
+        subprocess.run(['sudo', 'helm', 'repo', 'update'])
         if result.find('objectscale-helm-dev') == -1:
             print('Installing Objectscale helm dev repo')
-            subprocess.run(['helm', 'install', 'objs-mgr', 'ecs/objectscale-manager', '--set', 'global.registry=objectscale'])
-            subprocess.run(['helm', 'install', 'ecs/ecs-cluster', '--set', 'global.registry=objectscale', '--generate-name', '--set', 'storageServer.persistence.size=100Gi', '--set', 'performanceProfile=Micro', '--set', 'provision.enabled=True', '--set', 'storageServer.persistence.protected=True', '--set', 'enableAdvancedStatistics=False', '--set', 'managementGateway.service.type=NodePort', '--set', 's3.service.type=NodePort'])
+            subprocess.run(['sudo', 'helm', 'install', 'objs-mgr', 'deos/objectscale-manager', '--set', 'global.registry=objectscale'])
+            subprocess.run(['sudo', 'helm', 'install', 'deos/ecs-cluster', '--set', 'global.registry=objectscale', '--generate-name', '--set', 'storageServer.persistence.size=50Gi', '--set', 'performanceProfile=Micro', '--set', 'provision.enabled=True', '--set', 'storageServer.persistence.protected=True', '--set', 'enableAdvancedStatistics=False', '--set', 'managementGateway.service.type=NodePort', '--set', 's3.service.type=NodePort'])
             return
 
 
@@ -71,6 +68,6 @@ class objectscale_utility:
             result = subprocess.check_output('Minikube status', shell=True)
         except:
             print('Starting Minikube')
-            os.system('minikube start --vm-driver=none')
+            os.system('sudo minikube start --vm-driver=none')
 
 
