@@ -90,8 +90,20 @@ class parse_cache:
         self.parser.add_argument('-v', '--version',
                                  type=str,
                                  dest='version',
-                                 default=None,
+                                 default='v0.33.0',
                                  help='The version of objectscale to be installed.')
+
+        self.parser.add_argument('-kc', '--kindClean',
+                                 action='store_true',
+                                 default=False,
+                                 dest='kind_clean',
+                                 help='Destroy current Kind configuration and start fresh.')
+
+        self.parser.add_argument('-ki', '--kindInstall',
+                                 action='store_true',
+                                 default=False,
+                                 dest='kind_install',
+                                 help='Reinstall the Kind system, even if currently installed.')
 
 
     @staticmethod

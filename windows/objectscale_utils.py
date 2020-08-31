@@ -95,7 +95,8 @@ class objectscale_utility:
         self.start_minikube_if_stoppped()
         result = self.run_command_get_all_output('Helm repo list', shell=True)
         print('Installing ecs repo')
-        os.system('helm repo add ecs ' + self.default_helm_chart_url.replace('^', token).replace('$',version))
+        print(self.default_helm_chart_url.replace('^', token).replace('$', version))
+        os.system('helm repo add ecs ' + self.default_helm_chart_url.replace('^', token).replace('$', version))
         os.system(self.helm_repo_update_command)
         if result.find('objectscale-helm') == -1:
             print('Installing Objectscale helm dev repo')
