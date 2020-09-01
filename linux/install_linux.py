@@ -86,11 +86,11 @@ def execute_objectscale(args: argparse.ArgumentParser):
         print('----- END Objectscale -----\n')
         return
     objs_util = linux.objectscale_utils.objectscale_utility()
-    #if args.ECS_clean or args.clean:
-        #objs_util.clean_objectscale()
-        #objs_util.uninstall_objectscale()
+    if args.ECS_clean or args.clean:
+        objs_util.clean_objectscale()
+        objs_util.uninstall_objectscale()
 
-    objs_util.install_objectscale(args.token)
+    objs_util.install_objectscale(args.token), args.version
     print('----- END Objectscale -----\n')
 
 def verify_installation():
