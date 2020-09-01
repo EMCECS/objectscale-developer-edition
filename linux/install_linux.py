@@ -4,6 +4,7 @@ import linux.docker_utils
 import linux.helm_utils
 import linux.kubectl_utils
 import linux.minikube_utils
+import linux.objectscale_utils
 import linux.misc_utils
 import subprocess
 import time
@@ -78,8 +79,7 @@ def execute_objectscale(args: argparse.ArgumentParser):
     print('-----Objectscale-----')
     # TODO: use helm to install objectscale
     if args.token == 'NO TOKEN':
-        print(
-            'No Github token provided. Objectscale needs a token to install properly. Use the -t [Github token] flag to provide a token. See readme.md for more info.')
+        print('No Github token provided. Objectscale needs a token to install properly. Use the -t [Github token] flag to provide a token. See readme.md for more info.')
         print('----- END Objectscale -----\n')
         return
     objs_util = linux.objectscale_utils.objectscale_utility()
