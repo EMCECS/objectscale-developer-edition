@@ -9,10 +9,6 @@ import urllib.request
 class helm_utility:
     # This is the URL to pull HELM from if it is not currently installed
     # TODO: dynamically get the most recent helm version
-    # TODO: allow the users to specify a certain helm version
-    # TODO: implement capability to list available versions to use
-    # TODO: implement capability to get current helm version
-    # TODO: Helm version management???
     helm_url = "https://get.helm.sh/helm-v3.2.4-windows-amd64.zip"
     #TODO: Replace the string below with a proper installation location.
     helm_install_path = 'C:\\WINDOWS'
@@ -80,7 +76,7 @@ class helm_utility:
         current_path = os.getcwd()
         os.chdir(os.getenv('HOMEPATH') + '\\Downloads')
         if not path.exists(os.getenv('HOMEPATH') + '\\Downloads\\helm-v2.16.9-windows-amd64.zip'):
-            print('Starting Download.')
+            print('Starting Download of Helm.')
             local_filename, headers = urllib.request.urlretrieve(self.helm_url, os.getenv('HOMEPATH') + '\\Downloads\\helm-v2.16.9-windows-amd64.zip')
 
         if not path.exists(self.helm_install_path):
@@ -93,21 +89,5 @@ class helm_utility:
         except:
             print('Problem unzipping helm.')
 
-        old_path = PATH
-        try:
-            is_valid = self.find_helm_in_PATH(PATH=PATH)
-            if not is_valid:
-                print('Adding Helm to PATH.')
-                #TODO: Find a way to persistently set the PATH variable AND get around the limit of 1024 characters
-
-                os.environ['PATH'] = PATH + ';C:\\' + self.helm_install_path
-            else:
-                print('Helm installed and ready to use from the command line.')
-        except:
-            print('Issue adding Helm to Path... reverting.')
-            print(sys.exc_info())
-            os.environ['PATH'] = old_path
-            return
         os.chdir(current_path)
-
         return

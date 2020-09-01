@@ -6,6 +6,7 @@ import linux.kubectl_utils
 import linux.minikube_utils
 import linux.objectscale_utils
 import linux.misc_utils
+import linux.objectscale_utils
 import subprocess
 import time
 
@@ -21,6 +22,7 @@ def install_tux(args: argparse.ArgumentParser):
     execute_minikube(args)
     execute_kubectl(args)
     execute_helm(args)
+    execute_misc(args)
     execute_objectscale(args)
 
 def execute_docker(args: argparse.ArgumentParser):
@@ -34,7 +36,6 @@ def execute_docker(args: argparse.ArgumentParser):
     # Start install
     docker_util.install_docker()
     print('-----End Docker-----')
-
 
 def execute_helm(args: argparse.ArgumentParser):
     print('-----Helm-----')
@@ -62,18 +63,20 @@ def execute_minikube(args: argparse.ArgumentParser):
     print('-----Minikube-----')
     minikube_util = linux.minikube_utils.minikube_utility()
 
-    #if args.clean or args.minikube_clean:
-        #minikube_util.clean_minikube()
+    # if args.clean or args.minikube_clean:
+        # minikube_util.clean_minikube()
 
     # Start install
     minikube_util.install_minikube()
     print('-----End Minikube-----')
 
 def execute_misc(args: argparse.ArgumentParser):
+    print('-----Misc Utilities----')
     misc_util = linux.misc_utils.misc_utility()
 
     # Start install
     misckube_util.install_misc()
+    print('-----End Misc Utilities-----')
 
 def execute_objectscale(args: argparse.ArgumentParser):
     print('-----Objectscale-----')
@@ -83,11 +86,11 @@ def execute_objectscale(args: argparse.ArgumentParser):
         print('----- END Objectscale -----\n')
         return
     objs_util = linux.objectscale_utils.objectscale_utility()
-    if args.ECS_clean or args.clean:
-        objs_util.clean_objectscale()
-        objs_util.uninstall_objectscale()
+    #if args.ECS_clean or args.clean:
+        #objs_util.clean_objectscale()
+        #objs_util.uninstall_objectscale()
 
-    objs_util.install_objectscale(args.token, args.version)
+    objs_util.install_objectscale(args.token)
     print('----- END Objectscale -----\n')
 
 def verify_installation():

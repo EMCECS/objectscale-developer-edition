@@ -7,6 +7,7 @@ import windows.minikube_utils
 import windows.objectscale_utils
 import windows.helm_utils
 import windows.cert_utils
+import windows.kind_utils
 
 # Pathing variables.
 PATH = os.getenv('PATH')
@@ -25,6 +26,8 @@ def install_win(args: argparse.ArgumentParser, certs_found: bool):
     install_certs(args)
 
     install_minikube(args)
+
+    install_kind(args)
 
     install_helm(args)
 
@@ -153,6 +156,31 @@ def install_certs(args: argparse.ArgumentParser):
     print('Copying certificates to minikube.')
     cert_manager.move_certs_to_minikube()
     print("----- End Certificates (Windows) -----" + colors.reset)
+
+def install_kind(args):
+    #TODO: give Kind a color
+    #TODO: implement flags
+    print('-----Kind-----')
+    kind_manager = windows.kind_utils.kind_utility()
+    kind_installed, kind_path = kind_manager.check_kind_installation()
+    if kind_installed and not (args.clean or args.kind_clean or args.kind_installed):
+        print('Kind found!')
+        print('Found at ' + kind_manager.helm_path)
+        kind_manager.get_kind_version()
+    elif not kind_installed:
+        kind_manager.install_kind()
+
+    if args.kind_install:
+        print('Kind installed, now re-installing..')
+        kind_manager.uninstall_kind()
+        kind_manager.install_kind()
+
+    if args.clean or args.kind_clean:
+        print('Removing local data')
+        kind_manager.clean_kind()
+
+    print('----- END Helm -----\n' + colors.reset)
+    print('-----End Kind-----')
 
 
 def verify_installation(args: argparse.ArgumentParser) -> bool:

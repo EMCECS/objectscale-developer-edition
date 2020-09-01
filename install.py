@@ -110,12 +110,12 @@ def main():
     psutil = importlib.import_module('psutil')
     check_system_requirements(psutil)
     print('----- END Libraries & Prerequisites -----')
-    if args.versions_query:
-        query.list_versions()
-        return
     version_query = importlib.import_module('auxillary.version_query')
     query = version_query.version_manager(args.token)
     query.fetch_versions()
+    if args.versions_query:
+        query.list_versions()
+        return
     if args.version is not None:
         query.select_version(args.version)
 
