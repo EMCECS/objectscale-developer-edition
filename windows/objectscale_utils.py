@@ -114,10 +114,10 @@ class objectscale_utility:
             os.system('minikube start --vm-driver=hyperv')
         return
 
-    def run_command_get_all_output(self, command, shell=True, stderr=subprocess.STDOUT) -> str:
+    def run_command_get_all_output(self, command, shell=False, stderr=subprocess.STDOUT) -> str:
         output = ''
         try:
-            output = subprocess.check_output(command, shell=False, stderr=stderr)
+            output = subprocess.check_output(command, shell=shell, stderr=stderr)
         except subprocess.CalledProcessError as e:
             print(e.output.decode(encoding='ascii'))
             return e.output.decode(encoding='ascii')
