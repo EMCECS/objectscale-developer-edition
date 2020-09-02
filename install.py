@@ -3,6 +3,7 @@
 import platform
 import libmgr
 import os
+import subprocess
 import shutil
 import auxillary.arg_cache
 import importlib
@@ -102,6 +103,17 @@ def main():
     args = auxillary.arg_cache.parse_cache()
     args = args.parser.parse_args()
 
+    # Discern the current operating system and run the proper install script for it.
+    # The install scripts are imported on the fly to reduce software conflicts.
+    os_var = platform.system().casefold()
+    if os_var.find('linux') > -1:
+        print('Starting dependency installations for Linux.')
+        subprocess.run(['sudo', 'apt-get', 'clean'])
+        subprocess.run(['sudo', 'apt-get', 'update'])
+        subprocess.run(['sudo', 'apt', 'install', 'python3-pip'])
+        subprocess.run(['sudo', 'apt-get', 'install', 'gcc', 'python3-dev'])
+        subprocess.run(['sudo', 'pip3', 'install', 'psutil'])
+        print('Dependency installations complete')
     # This section of code is used to fetch and check all prerequisites for this installation process
     # With the exception of Minikube, Docker, Helm, and of course, Objectscale.
     print('-----Libraries & Prerequisites-----')
@@ -118,15 +130,16 @@ def main():
         return
     if args.version is not None:
         query.select_version(args.version)
-
-    # Discern the current operating system and run the proper install script for it.
-    # The install scripts are imported on the fly to reduce software conflicts.
-    os_var = platform.system().casefold()
     try:
         if os_var.find('linux') > -1:
+            print('Starting installation for Linux.')
             tux_installer = importlib.import_module('linux.install_linux')
+            print('Dependency installations complete')
             tux_installer.install_tux(args)
+            print('Dependency installations complete')
         elif os_var.find('windows') > -1:
+            print('Starting installation for Windows.')
+            install_prereqs(args)
             windows_installer = importlib.import_module('windows.install_windows')
             windows_installer.install_win(args, manager.certs_found)
         elif os_var.find('darwin') > -1:
