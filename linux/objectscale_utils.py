@@ -88,7 +88,7 @@ class objectscale_utility:
             result = subprocess.check_output('Minikube status', shell=True)
         except:
             print('Starting Minikube')
-            os.system('minikube start --vm-driver=none')
+            os.system('sudo minikube start --vm-driver=none')
 
     def run_command_get_all_output(self, command, shell=False, stderr=subprocess.STDOUT) -> str:
         output = ''

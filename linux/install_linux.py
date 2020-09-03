@@ -4,11 +4,10 @@ import linux.docker_utils
 import linux.helm_utils
 import linux.kubectl_utils
 import linux.minikube_utils
-import linux.objectscale_utils
 import linux.misc_utils
 import linux.objectscale_utils
 import subprocess
-import time
+import times
 
 # Default values of arguments
 SIZE_OF_DEPLOYMENT = "M"
