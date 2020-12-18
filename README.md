@@ -1,5 +1,8 @@
 # Objectscale-Developer-Edition
 
+###WARNING:
+Running this tool may render previous portions of your cluster inoperable! Please only use this utility on a clean installation. If you use minikube, runing `minikube delete` can ensure this is the case.
+
 A tool for automatically setting up and managing a development environment for EMCECS Objectscale for Windows, Linux, and MacOS.
 
 #### Before you set up your development environment:
