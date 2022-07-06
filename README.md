@@ -1,3 +1,6 @@
+WARNING: FOR INTERNAL USE ONLY
+REQUIRES DELL ECS ENTERPRISE GITHUB CREDENTIALS
+
 # Description
 Script used to install ObjectScale manager + ECS Cluster in one command.
 
