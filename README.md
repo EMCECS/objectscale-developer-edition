@@ -7,7 +7,7 @@ A tool for automatically setting up and managing a development environment for E
 
 #### Before you set up your development environment:
 
- * Create a Github developer access token.
+ * Create a Github developer access token. Test
  * Install Python 3.
  * Make sure you have an active internet connection.
  * Read the command-line syntax.
