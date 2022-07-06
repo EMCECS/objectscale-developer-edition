@@ -11,3 +11,8 @@ Make sure that minikube is not running.
 minikube stop
 minikube delete
 ```
+
+Run install.sh:
+```
+sh install.sh
+```
