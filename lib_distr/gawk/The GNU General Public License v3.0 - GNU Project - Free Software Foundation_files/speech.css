@@ -1,8 +1,0 @@
-/* Stylesheet used on https://www.gnu.org by screen readers,
-created June 18, 2020.
-This file is in the public domain. */
-
-a#more-links, a#less-links, a.close {
-   display: none;
-   visibility: hidden;
-}
