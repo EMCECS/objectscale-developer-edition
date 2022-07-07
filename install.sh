@@ -19,7 +19,7 @@ if [ ! -d "$DEV_REPO" ]; then
 	cd ../
 fi
 
-cd ./dev-tools/objectscale/deployment
+#cd ./dev-tools/objectscale/deployment
 
 
 #Start minikube
@@ -52,3 +52,7 @@ kubectl rollout status deployment/zookeeper-operator
 #Install ECS Cluster
 ./install-ecs-cluster.sh
 
+#Clean of directory
+cd ../../..
+
+rm -r -d /dev-tools
