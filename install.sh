@@ -23,4 +23,32 @@ cd ./dev-tools/objectscale/deployment
 
 
 #Start minikube
-sh start-minikube.sh
+./start-minikube.sh
+
+#Wait for minikube
+kubectl -n metallb-system rollout status deployment/controller
+kubectl -n kube-system rollout status deployment/coredns
+
+cd ./dev-tools/objectscale/deployment
+#Install Decks/Kahm
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/application/master/config/crd/bases/app.k8s.io_applications.yaml
+./install-decks-kahm.sh
+kubectl rollout status deployment/decks
+
+#Install Objectscale Manager
+./install-objectscale-manager.sh
+
+kubectl rollout status deployment/atlas-operator
+kubectl rollout status deployment/objectscale-dcm
+kubectl rollout status deployment/objectscale-federation
+kubectl rollout status deployment/objectscale-gateway
+kubectl rollout status deployment/objectscale-iam
+kubectl rollout status deployment/objectscale-manager-bookkeeper-operator
+kubectl rollout status deployment/objectscale-manager-pravega-operator
+kubectl rollout status deployment/objectscale-service-pod
+kubectl rollout status deployment/objectscale-operator
+kubectl rollout status deployment/zookeeper-operator
+
+#Install ECS Cluster
+./install-ecs-cluster.sh
+
