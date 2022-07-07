@@ -19,3 +19,14 @@ Run install.sh:
 ```
 sh install.sh
 ```
+
+# Uninstall:
+Run uninstall.sh, this will remove the objectscale manager and ecs cluster.
+```
+sh uninstall.sh
+```
+You may also want to scrap your minikube instance as well.
+```
+minikube stop
+minikube delete
+```
