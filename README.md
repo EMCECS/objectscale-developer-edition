@@ -44,7 +44,6 @@ The following are *Output* subjects, and are valid with output verbs:
  * Endpoint Credentials   : denoted by 'ec'
 The following are *Certificate* subjects, and are valid with the certificate verbs:
  * Certificates (Windows) : denoted by 'pc'  
- * Minikube               : denoted by 'm'  
 
 #### Verbs
 Component verbs:
