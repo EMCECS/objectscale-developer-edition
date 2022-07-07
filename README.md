@@ -1,7 +1,10 @@
-WARNING: FOR INTERNAL USE ONLY
-REQUIRES DELL ECS ENTERPRISE GITHUB CREDENTIALS
+# WARNING: 
+FOR INTERNAL USE ONLY (REQUIRES DELL ECS ENTERPRISE GITHUB CREDENTIALS)
+Running this tool may render previous portions of your cluster inoperable! Please only use this utility on a clean installation. If you use minikube, runing `minikube delete` can ensure this is the case.
 
 # Description
+Jira Story [OBDEF-18807](https://jira.cec.lab.emc.com/browse/OBSDEF-18807)
+
 Script used to install ObjectScale manager + ECS Cluster in one command.
 
 Based of off https://eos2git.cec.lab.emc.com/ECS/dev-tools/tree/master/objectscale/deployment
