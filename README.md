@@ -3,6 +3,12 @@ FOR INTERNAL USE ONLY (REQUIRES DELL ECS ENTERPRISE GITHUB CREDENTIALS)
 
 Running this tool may render previous portions of your cluster inoperable! Please only use this utility on a clean installation. If you use minikube, runing `minikube delete` can ensure this is the case.
 
+# Prerequesite
+- Memory: 32G
+- Disk space: 256Gi recommended
+- Helm: v3.5.4 (can be installed/upgraded in install.sh if enabled)
+- minikube: v1.21.0
+
 # Description
 Jira Story [OBDEF-18807](https://jira.cec.lab.emc.com/browse/OBSDEF-18807)
 
